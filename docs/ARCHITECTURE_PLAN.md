@@ -2,9 +2,16 @@
 
 ## Architecture & Implementation Plan
 
-**Version:** 2.1  
+**Version:** 2.2  
 **Date:** April 2026  
-**Status:** REVISED - Critical Review + SWOT + Risk Analysis Applied
+**Status:** REVISED - Market Analysis + WoS API Integration Added
+
+### Changelog v2.2
+- Added Market Positioning Analysis (Section 34)
+- Added Web of Science API Integration Analysis (Section 35)
+- Added Global Market Potential (Section 36)
+- Added Tool Classification & Category Mapping (Section 37)
+- Added Competitive Tier Ranking (Section 38)
 
 ### Changelog v2.1
 - Added SWOT Analysis (Section 22)
@@ -2060,7 +2067,623 @@ v4.0 (Q3 2027)
 
 ---
 
+## 34. Market Positioning Analysis
+
+### 34.1 Product Category Classification
+
+ResearchFlow spada v več kategorij hkrati, kar definira njegovo edinstveno pozicijo:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    PRODUCT CATEGORY TAXONOMY                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  PRIMARY CATEGORY:                                                           │
+│  ━━━━━━━━━━━━━━━━━                                                          │
+│  AI-Powered Research Automation Platform                                     │
+│     └── Subcategory: Systematic/Scoping Review Automation                   │
+│                                                                              │
+│  SECONDARY CATEGORIES:                                                       │
+│  ━━━━━━━━━━━━━━━━━━━━                                                       │
+│  ├── Academic Writing Assistant (AI)                                        │
+│  ├── Literature Review Tool                                                 │
+│  ├── Research Workflow Management                                           │
+│  ├── Evidence Synthesis Platform                                            │
+│  └── Scientific Document Generation                                         │
+│                                                                              │
+│  ADJACENT CATEGORIES:                                                        │
+│  ━━━━━━━━━━━━━━━━━━━                                                        │
+│  ├── Reference Management (Zotero, Mendeley)                                │
+│  ├── Abstract Screening (Rayyan, Covidence)                                 │
+│  ├── AI Research Assistants (Elicit, Semantic Scholar)                      │
+│  └── Academic Collaboration (Overleaf, Authorea)                            │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 34.2 Market Tier Classification
+
+```
+                    TIER 1: Enterprise Research Platforms
+                    ($10,000+ / year)
+┌────────────────────────────────────────────────────────────────────────────┐
+│  • Covidence ($1,900-3,500/review)                                         │
+│  • DistillerSR ($4,000-10,000/year)                                        │
+│  • EPPI-Reviewer (Institutional license)                                   │
+│  • JBI SUMARI ($1,500-3,000/year)                                          │
+│  Značilnosti: Full SR support, institutional, no AI generation            │
+└────────────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                    TIER 2: Professional Research Tools
+                    ($500-2,000 / year)
+┌────────────────────────────────────────────────────────────────────────────┐
+│  • Rayyan Pro ($12-25/mo per user)                                         │
+│  • SciSpace Premium ($144/year)                                            │
+│  • Scholarcy Library ($156/year)                                           │
+│  Značilnosti: Team features, some AI, limited scope                       │
+└────────────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+          ═══════════════════════════════════════════════════
+          ║       TIER 2.5: RESEARCHFLOW POSITION           ║
+          ║       ($350-1,200 / year proposed)              ║
+          ═══════════════════════════════════════════════════
+          │  • Full pipeline automation (unique)            │
+          │  • AI article generation (unique)               │
+          │  • HITL quality control                        │
+          │  • Cloud-native, modern UX                     │
+          └─────────────────────────────────────────────────┘
+                              │
+                              ▼
+                    TIER 3: Researcher Tools (Freemium)
+                    ($0-200 / year)
+┌────────────────────────────────────────────────────────────────────────────┐
+│  • Rayyan Free (basic screening)                                           │
+│  • ASReview (open source, AI screening)                                    │
+│  • Elicit Free (research exploration)                                      │
+│  • Research Rabbit (free discovery)                                        │
+│  Značilnosti: Single-purpose, free tiers, limited features                │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 34.3 Unique Positioning Statement
+
+> **ResearchFlow: Edina platforma, ki pokriva celoten cikel scoping reviewa od raziskovalnega vprašanja do publikacije-pripravnega članka, z AI podporo in človekom na volanu.**
+
+**Ključne razlike:**
+
+| Atribut | ResearchFlow | Konkurenca |
+|---------|--------------|------------|
+| Celoten pipeline | ✅ Research plan → PDF | ❌ Samo screening ALI samo pisanje |
+| AI generacija članka | ✅ Z viri, HITL | ❌ Nobeden |
+| HITL na vseh korakih | ✅ 10 decision points | ⚠️ Omejeno |
+| RAG chatbot | ✅ Dostop do vseh docs | ❌ Večinoma ne |
+| Vizualizacije | ✅ PRISMA, Evidence Map | ⚠️ Omejen PRISMA |
+| Reasoning traces | ✅ Transparentno | ❌ Black box |
+
+---
+
+## 35. Web of Science API Integration Analysis
+
+### 35.1 WoS API Pregled
+
+Clarivate ponuja dva API-ja za dostop do Web of Science:
+
+#### A) Web of Science Starter API (Osnovni)
+
+| Lastnost | Vrednost |
+|----------|----------|
+| **Namen** | Osnovni metadata check (DOI, avtor, naslov, citati) |
+| **Full-text vsebina** | ❌ NE - samo metapodatki |
+| **Abstracts** | ⚠️ Omejeno (skrajšani) |
+| **Limiti (Free Trial)** | 50 requests/dan |
+| **Limiti (Institutional)** | 5,000-20,000 requests/dan |
+| **Cena** | Brezplačno z WoS naročnino |
+
+#### B) Web of Science API Expanded (Napredni)
+
+| Lastnost | Vrednost |
+|----------|----------|
+| **Namen** | Polni metapodatki + citati + funding |
+| **Full-text vsebina** | ❌ NE - samo metapodatki in abstracts |
+| **Abstracts** | ✅ Polni abstracts |
+| **Citing/Cited references** | ✅ DA |
+| **Limiti** | 50,000 - 3,000,000 records/leto |
+| **Cena** | Plačljivo (institucijska licenca) |
+
+### 35.2 Kaj WoS API OMOGOČA
+
+```python
+# WoS API Expanded - Available Data
+wos_api_returns = {
+    "metadata": {
+        "title": "✅ Full title",
+        "authors": "✅ Names, affiliations, ORCID",
+        "source": "✅ Journal, volume, issue, pages",
+        "doi": "✅ DOI identifier",
+        "accession_number": "✅ WoS UT",
+        "publication_date": "✅ Full date",
+        "document_type": "✅ Article, Review, etc.",
+        "language": "✅ Publication language"
+    },
+    "abstract": {
+        "content": "✅ Full abstract text",  # THIS IS KEY FOR SCREENING
+        "keywords": "✅ Author + WoS keywords"
+    },
+    "citations": {
+        "times_cited": "✅ Current count",
+        "citing_articles": "✅ List of citing papers",
+        "cited_references": "✅ Bibliography of paper"
+    },
+    "funding": {
+        "agencies": "✅ Funding bodies",
+        "grant_numbers": "✅ Grant IDs"
+    },
+    "full_text": "❌ NOT AVAILABLE",  # Critical limitation
+    "pdf": "❌ NOT AVAILABLE"
+}
+```
+
+### 35.3 Kaj WoS API NE OMOGOČA
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    WoS API LIMITATIONS                                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ❌ FULL-TEXT VSEBINA                                                       │
+│     • WoS API ne služi člankov                                              │
+│     • Uporabnik mora članke prenesti iz založniških portalov               │
+│     • To ni tehnična omejitev, ampak pravna (copyright)                    │
+│                                                                              │
+│  ❌ AVTOMATSKI BATCH PRENOS                                                 │
+│     • Ni "download all papers" funkcionalnosti                              │
+│     • Vsak članek mora biti pridobljen posebej                             │
+│                                                                              │
+│  ❌ DIREKTEN PDF DOSTOP                                                     │
+│     • PDF-ji so na strani založnikov (Elsevier, Springer, etc.)            │
+│     • Potrebna je institucijska naročnina ali Open Access                  │
+│                                                                              │
+│  ⚠️ RATE LIMITS                                                             │
+│     • 2-5 requests/sekundo                                                  │
+│     • Dnevne/letne kvote                                                    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 35.4 ResearchFlow + WoS API Integracija
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│              PROPOSED WoS INTEGRATION WORKFLOW                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  FAZA 1: Iskalni niz                                                        │
+│  ━━━━━━━━━━━━━━━━━━━                                                        │
+│  [ResearchFlow] ──► Generira WoS-compatible search string                  │
+│                     (TS=, TI=, AU=, etc.)                                   │
+│                                                                              │
+│  FAZA 2: Izvoz abstraktov (MOŽNO Z API)                                    │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                   │
+│  [WoS API] ══► ABSTRACT EXPORT                                              │
+│              │  • Execute search query                                       │
+│              │  • Retrieve all matching records                              │
+│              │  • Get full abstracts programmatically                        │
+│              └─► JSON/XML output (title, abstract, DOI, etc.)               │
+│                                                                              │
+│  FAZA 3: Abstract screening (V ResearchFlow)                                │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                │
+│  [ResearchFlow] ──► AI screens abstracts                                    │
+│                 ──► HITL za UNCERTAIN                                       │
+│                 ──► Izbor INCLUDED člankov                                  │
+│                                                                              │
+│  FAZA 4: Full-text pridobivanje (MANUAL - API NE PODPIRA)                  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                  │
+│  [Uporabnik] ──► Prejme seznam DOI-jev za prenos                           │
+│              ──► Prenese preko institucijskega dostopa:                     │
+│                  • Knjižnični portal                                         │
+│                  • ScienceDirect, SpringerLink, Wiley, etc.                 │
+│                  • Interlibrary loan za nedostopne                          │
+│              ──► Naloži PDF-je v ResearchFlow                               │
+│                                                                              │
+│  FAZA 5: Analiza in pisanje (V ResearchFlow)                               │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                               │
+│  [ResearchFlow] ──► Procesira PDF-je                                        │
+│                 ──► Izvaja analizo                                          │
+│                 ──► Generira članek                                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 35.5 WoS API - Implementacijski načrt
+
+```python
+class WoSIntegration:
+    """
+    Web of Science API integration for automated abstract retrieval.
+    Note: Full-text retrieval is NOT possible via API.
+    """
+    
+    BASE_URL = "https://wos-api.clarivate.com/api/wos"
+    
+    async def search(self, query: str, database: str = "WOS") -> dict:
+        """
+        Execute search and return matching records.
+        
+        Args:
+            query: WoS advanced search query (e.g., "TS=(AI AND HR)")
+            database: WOS, MEDLINE, etc.
+        
+        Returns:
+            List of records with abstracts and metadata
+        """
+        params = {
+            "databaseId": database,
+            "usrQuery": query,
+            "count": 100,  # Max per request
+            "firstRecord": 1
+        }
+        # Returns: title, authors, abstract, DOI, times_cited, etc.
+        # Does NOT return: full-text, PDF
+        pass
+    
+    async def export_abstracts_for_screening(
+        self, 
+        query: str, 
+        max_records: int = 1000
+    ) -> List[Abstract]:
+        """
+        Export all abstracts for a search query.
+        Used for abstract screening phase.
+        """
+        abstracts = []
+        # Paginate through all results
+        # Rate limit: 2 req/sec
+        return abstracts
+    
+    # FULL-TEXT: Not available via API
+    # Users must download PDFs manually from publisher sites
+```
+
+### 35.6 Prihodnje možnosti (Spekulativno)
+
+| Funkcionalnost | Trenutno | Prihodnost (2027+?) |
+|----------------|----------|---------------------|
+| Abstract export | ✅ API | ✅ API |
+| Full-text search | ❌ Ne | ⚠️ Malo verjetno (copyright) |
+| PDF download | ❌ Ne | ❌ Zelo malo verjetno |
+| Open Access links | ✅ Da (če obstaja) | ✅ Izboljšano |
+| Preprint links | ⚠️ Omejeno | ✅ Verjetno boljše |
+| AI-powered search | ❌ Ne | ⚠️ Možno |
+
+**Zaključek:** WoS API je koristen za abstract screening fazo, NI pa rešitev za full-text pridobivanje. To ostaja uporabnikova naloga.
+
+---
+
+## 36. Global Market Potential
+
+### 36.1 Target Addressable Market (TAM → SAM → SOM)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    MARKET SIZE ANALYSIS                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  TAM (Total Addressable Market)                                             │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                              │
+│  Global Academic Research Software Market: ~$4.5B (2026)                    │
+│  CAGR: 12-15% annually                                                       │
+│  Includes: Reference managers, discovery tools, writing tools, etc.        │
+│                                                                              │
+│  SAM (Serviceable Addressable Market)                                       │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                          │
+│  Systematic/Scoping Review Tools: ~$350M (2026)                             │
+│  Growth: ~20-25% annually (AI adoption driving growth)                      │
+│  Key players: Covidence, Rayyan, DistillerSR, EPPI-Reviewer                │
+│                                                                              │
+│  SOM (Serviceable Obtainable Market)                                        │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                           │
+│  Realistic 5-year target: ~$5-15M ARR                                       │
+│  Market share goal: 1.5-4% of SAM                                           │
+│  Users: 10,000-30,000 researchers globally                                  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 36.2 Market Drivers
+
+| Driver | Impact | Trend |
+|--------|--------|-------|
+| **Publish or perish pressure** | HIGH | Constant ↔ |
+| **Systematic review requirements** | HIGH | Growing ▲ |
+| **AI adoption in academia** | MEDIUM→HIGH | Rapid growth ▲▲ |
+| **Time constraints for researchers** | HIGH | Increasing ▲ |
+| **Open science movement** | MEDIUM | Growing ▲ |
+| **Grant requirements for evidence synthesis** | HIGH | Increasing ▲ |
+| **Multi-disciplinary research** | MEDIUM | Growing ▲ |
+
+### 36.3 Geographic Market Potential
+
+| Region | Market Size | Growth | Entry Difficulty |
+|--------|-------------|--------|------------------|
+| **North America** | 35% of SAM | High | Medium (saturated) |
+| **Europe** | 30% of SAM | High | Low (GDPR advantage) |
+| **Asia Pacific** | 25% of SAM | Very High | Medium (localization) |
+| **Latin America** | 5% of SAM | High | Low (price sensitive) |
+| **Middle East/Africa** | 5% of SAM | High | Medium |
+
+### 36.4 User Segments & Volume
+
+```
+                    GLOBAL USER POTENTIAL
+        
+┌─────────────────────────────────────────────────────────────────┐
+│ PhD Students                                                     │
+│ Global estimate: ~3.5 million enrolled                          │
+│ Potential users: 500,000-700,000 (scoping/systematic reviews)   │
+│ Conversion target: 1-2% = 5,000-14,000 users                    │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ Postdocs & Early Career Researchers                             │
+│ Global estimate: ~1 million                                     │
+│ Potential users: 200,000-300,000                                │
+│ Conversion target: 2-3% = 4,000-9,000 users                     │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ Faculty & Senior Researchers                                     │
+│ Global estimate: ~2 million (active in research)                │
+│ Potential users: 100,000-200,000 (supervising reviews)          │
+│ Conversion target: 1% = 1,000-2,000 users                       │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ Research Institutions & Groups                                   │
+│ Global estimate: ~50,000 research departments                   │
+│ Potential customers: 5,000-10,000 (needing team tools)          │
+│ Conversion target: 2-5% = 100-500 teams                         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 36.5 Revenue Projections (5-Year)
+
+| Year | Users (MAU) | MRR | ARR | Notes |
+|------|-------------|-----|-----|-------|
+| Y1 | 500 | $5K | $60K | Beta + early adopters |
+| Y2 | 2,500 | $25K | $300K | Growth phase |
+| Y3 | 8,000 | $80K | $960K | Market expansion |
+| Y4 | 20,000 | $180K | $2.2M | Enterprise focus |
+| Y5 | 40,000 | $350K | $4.2M | International scale |
+
+---
+
+## 37. Tool Classification & Category Mapping
+
+### 37.1 Research Tool Ecosystem Map
+
+```
+┌────────────────────────────────────────────────────────────────────────────────┐
+│                     RESEARCH TOOL ECOSYSTEM (2026)                             │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│   DISCOVERY & SEARCH                    SCREENING & SELECTION                  │
+│   ──────────────────                    ──────────────────────                 │
+│   ├── Google Scholar (free)             ├── Rayyan (freemium)                  │
+│   ├── Semantic Scholar (free)           ├── Covidence (paid)                   │
+│   ├── PubMed (free)                     ├── ASReview (open source)             │
+│   ├── Web of Science (institutional)    ├── Abstrackr (free)                   │
+│   ├── Scopus (institutional)            └── EPPI-Reviewer (paid)               │
+│   ├── Dimensions (freemium)                                                    │
+│   └── OpenAlex (free)                                                          │
+│                                                                                │
+│   AI ASSISTANTS                         REFERENCE MANAGEMENT                   │
+│   ─────────────                         ────────────────────                   │
+│   ├── Elicit (freemium)                 ├── Zotero (free)                      │
+│   ├── Consensus (freemium)              ├── Mendeley (freemium)                │
+│   ├── SciSpace/Typeset (freemium)       ├── EndNote (paid)                     │
+│   ├── Scholarcy (freemium)              └── Paperpile (paid)                   │
+│   ├── Research Rabbit (free)                                                   │
+│   └── Scite (freemium)                                                         │
+│                                                                                │
+│   WRITING & COLLABORATION               SR/MA SPECIFIC                         │
+│   ───────────────────────               ───────────────                        │
+│   ├── Overleaf (freemium)               ├── DistillerSR (enterprise)           │
+│   ├── Authorea (freemium)               ├── JBI SUMARI (paid)                  │
+│   ├── Grammarly (freemium)              ├── RevMan (Cochrane, free)            │
+│   ├── ChatGPT/Claude (varies)           ├── PRISMA generators (free)           │
+│   └── Writefull (freemium)              └── PROSPERO (free registry)           │
+│                                                                                │
+│                                                                                │
+│   ╔════════════════════════════════════════════════════════════════════════╗   │
+│   ║                     ★ RESEARCHFLOW (PROPOSED) ★                       ║   │
+│   ║                                                                        ║   │
+│   ║  Spans: Discovery → Screening → Analysis → Writing → Visualization   ║   │
+│   ║  Unique: AI article generation + HITL + Full pipeline                 ║   │
+│   ║                                                                        ║   │
+│   ╚════════════════════════════════════════════════════════════════════════╝   │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 37.2 Competitive Category Analysis
+
+| Kategorija | Orodja | ResearchFlow Coverage |
+|------------|--------|----------------------|
+| **Literature Search** | WoS, Scopus, PubMed | ⚠️ Integrates via API, doesn't replace |
+| **Paper Discovery** | Semantic Scholar, Research Rabbit | ⚠️ RAG-based, not primary function |
+| **Abstract Screening** | Rayyan, ASReview, Covidence | ✅ FULL - AI-assisted + HITL |
+| **Reference Management** | Zotero, Mendeley | ⚠️ Import/export, not core |
+| **AI Research Assistant** | Elicit, Consensus, SciSpace | ✅ FULL - Integrated chatbot |
+| **Writing Assistance** | Grammarly, ChatGPT | ✅ FULL - Article generation |
+| **Collaboration** | Overleaf, Authorea | ⚠️ Partial (v2.0 roadmap) |
+| **SR Workflow** | Covidence, DistillerSR | ✅ FULL - Scoping review specific |
+| **Visualization** | RevMan, Various | ✅ FULL - PRISMA, Evidence Maps |
+| **Export/Formatting** | Overleaf, LaTeX editors | ✅ FULL - PDF, DOCX, BibTeX |
+
+### 37.3 Category Leadership Potential
+
+```
+CURRENT MARKET LEADERS BY CATEGORY:
+
+Category                    Leader              ResearchFlow Potential
+─────────────────────────────────────────────────────────────────────────
+Abstract Screening          Rayyan              🥈 Challenger (AI edge)
+SR Workflow Management      Covidence           🥉 Disruptor (price + AI)
+AI Research Assistant       Elicit              🥈 Challenger (workflow integration)
+Article Generation          None (gap!)         🥇 Create category!
+Full Pipeline Automation    None (gap!)         🥇 Create category!
+
+Legend:
+🥇 = Market leader potential (first mover in new category)
+🥈 = Strong challenger (differentiated offering)
+🥉 = Potential disruptor (different approach)
+```
+
+---
+
+## 38. Competitive Tier Ranking
+
+### 38.1 Feature Comparison Matrix
+
+```
+┌──────────────────────┬─────────┬─────────┬─────────┬─────────┬────────────┐
+│ Feature              │Rayyan   │Covidence│Elicit   │ASReview │ResearchFlow│
+├──────────────────────┼─────────┼─────────┼─────────┼─────────┼────────────┤
+│ Abstract Screening   │ ✅      │ ✅      │ ⚠️      │ ✅      │ ✅         │
+│ AI-assisted Screen   │ ⚠️      │ ⚠️      │ ✅      │ ✅      │ ✅         │
+│ Full-text Analysis   │ ❌      │ ✅      │ ⚠️      │ ❌      │ ✅         │
+│ Article Generation   │ ❌      │ ❌      │ ❌      │ ❌      │ ✅ ★       │
+│ HITL Workflow        │ ⚠️      │ ✅      │ ❌      │ ⚠️      │ ✅         │
+│ RAG Chatbot          │ ❌      │ ❌      │ ✅      │ ❌      │ ✅         │
+│ PRISMA Diagram       │ ❌      │ ✅      │ ❌      │ ❌      │ ✅         │
+│ Visualization Suite  │ ❌      │ ⚠️      │ ❌      │ ❌      │ ✅         │
+│ PDF Export           │ ❌      │ ⚠️      │ ❌      │ ❌      │ ✅         │
+│ Team Collaboration   │ ✅      │ ✅      │ ❌      │ ⚠️      │ ⚠️ (v2)    │
+│ Free Tier            │ ✅      │ ❌      │ ✅      │ ✅      │ ✅         │
+│ Cloud-native         │ ✅      │ ✅      │ ✅      │ ❌      │ ✅         │
+│ Open Source          │ ❌      │ ❌      │ ❌      │ ✅      │ ❌         │
+├──────────────────────┼─────────┼─────────┼─────────┼─────────┼────────────┤
+│ TOTAL SCORE          │ 5/12    │ 7/12    │ 5/12    │ 4/12    │ 11/12 ★   │
+└──────────────────────┴─────────┴─────────┴─────────┴─────────┴────────────┘
+
+Legend: ✅ = Full support | ⚠️ = Partial | ❌ = No support | ★ = Unique feature
+```
+
+### 38.2 Final Competitive Ranking
+
+```
+                    COMPETITIVE TIER RANKING (2026)
+                    
+    ════════════════════════════════════════════════════════════
+    
+    TIER S: Complete Platform (End-to-End)
+    ───────────────────────────────────────
+    
+    ┌─────────────────────────────────────────────────────────┐
+    │  ★ RESEARCHFLOW                                         │
+    │    • Only tool with AI article generation              │
+    │    • Full pipeline: Plan → Screen → Write → Export     │
+    │    • HITL at every step                                │
+    │    • Position: CATEGORY CREATOR / LEADER               │
+    └─────────────────────────────────────────────────────────┘
+    
+    ════════════════════════════════════════════════════════════
+    
+    TIER A: Comprehensive Workflow Tools
+    ─────────────────────────────────────
+    
+    ┌─────────────────────────────────────────────────────────┐
+    │  Covidence ($1,900-3,500/review)                        │
+    │    • Gold standard for SR workflow                     │
+    │    • Strong institutional adoption                     │
+    │    • No AI generation                                  │
+    │    • Position: INCUMBENT LEADER                        │
+    ├─────────────────────────────────────────────────────────┤
+    │  DistillerSR ($4,000-10,000/year)                      │
+    │    • Enterprise features                               │
+    │    • Regulatory compliance                             │
+    │    • Position: ENTERPRISE LEADER                       │
+    └─────────────────────────────────────────────────────────┘
+    
+    ════════════════════════════════════════════════════════════
+    
+    TIER B: Specialized Tools
+    ──────────────────────────
+    
+    ┌─────────────────────────────────────────────────────────┐
+    │  Rayyan (Free / $12-25/mo)                              │
+    │    • Best free tier for screening                      │
+    │    • Large user base                                   │
+    │    • Position: SCREENING LEADER                        │
+    ├─────────────────────────────────────────────────────────┤
+    │  ASReview (Free, Open Source)                          │
+    │    • Active learning for screening                     │
+    │    • Academic community driven                         │
+    │    • Position: OPEN SOURCE LEADER                      │
+    ├─────────────────────────────────────────────────────────┤
+    │  Elicit (Free / $10/mo)                                │
+    │    • Best for exploration/brainstorming                │
+    │    • Good AI but no workflow                          │
+    │    • Position: AI ASSISTANT LEADER                     │
+    └─────────────────────────────────────────────────────────┘
+    
+    ════════════════════════════════════════════════════════════
+    
+    TIER C: Single-Purpose Tools
+    ─────────────────────────────
+    
+    ┌─────────────────────────────────────────────────────────┐
+    │  Research Rabbit, Scholarcy, SciSpace, etc.             │
+    │    • Good at one thing                                 │
+    │    • Must be combined with other tools                 │
+    │    • Position: COMPLEMENTARY TOOLS                     │
+    └─────────────────────────────────────────────────────────┘
+```
+
+### 38.3 Strategic Positioning Conclusion
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    RESEARCHFLOW MARKET POSITION                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  KATEGORIJA:        AI-Powered Scoping Review Automation Platform           │
+│  TIER:              S (Category Creator)                                    │
+│  TRŽNI POTENCIAL:   $5-15M ARR (5-year)                                    │
+│  KONKURENČNA PREDNOST:                                                      │
+│                                                                              │
+│    1. EDINI z AI generacijo celotnega članka                               │
+│    2. EDINI s celotnim pipelineom (research plan → PDF)                    │
+│    3. HITL na vsakem koraku (brez black box)                               │
+│    4. RAG chatbot z dostopom do vseh dokumentov                            │
+│    5. Moderna cloud-native arhitektura                                      │
+│                                                                              │
+│  PRIMERJAVA CENE:                                                           │
+│    • Covidence: $1,900-3,500 per review                                    │
+│    • DistillerSR: $4,000-10,000/year                                       │
+│    • ResearchFlow: $29-99/mo ($350-1,200/year)  ← 60-80% ceneje!          │
+│                                                                              │
+│  VSTOPNA STRATEGIJA:                                                        │
+│    • Freemium za PhD študente (acquisition)                                │
+│    • Pro tier za aktivne raziskovalce (revenue)                            │
+│    • Team/Enterprise za institucije (scale)                                │
+│                                                                              │
+│  WoS API INTEGRACIJA:                                                       │
+│    • Abstracts: ✅ Avtomatski izvoz možen                                  │
+│    • Full-text: ❌ Manual prenos (copyright omejitev)                      │
+│    • Prihodnost: Abstracts ostanejo ključ, full-text malo verjetno        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 **Dokument pripravil:** Claude (AI Assistant)  
 **Za potrditev:** [Ime raziskovalca]  
 **Datum:** April 2026
-**Verzija:** 2.1
+**Verzija:** 2.2
