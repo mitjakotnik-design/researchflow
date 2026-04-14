@@ -2,9 +2,16 @@
 
 ## Architecture & Implementation Plan
 
-**Version:** 2.2  
+**Version:** 2.3  
 **Date:** April 2026  
-**Status:** REVISED - Market Analysis + WoS API Integration Added
+**Status:** REVISED - Detailed Competitive Comparison Added
+
+### Changelog v2.3
+- Added Detailed Competitive Comparison by Categories (Section 39)
+- 8 evaluation categories with 50+ metrics
+- Individual competitor profiles
+- Radar chart comparisons
+- Feature-by-feature analysis
 
 ### Changelog v2.2
 - Added Market Positioning Analysis (Section 34)
@@ -2683,7 +2690,539 @@ Legend: ✅ = Full support | ⚠️ = Partial | ❌ = No support | ★ = Unique 
 
 ---
 
+## 39. Detailed Competitive Comparison by Categories
+
+### 39.1 Evaluation Framework
+
+Primerjava temelji na 8 ključnih kategorijah z utežmi glede na pomembnost za scoping review:
+
+| # | Kategorija | Utež | Opis |
+|---|------------|------|------|
+| 1 | **Funkcionalnosti** | 25% | Obseg in globina funkcij |
+| 2 | **AI zmogljivosti** | 20% | Kakovost in obseg AI |
+| 3 | **Cena/Vrednost** | 15% | Cenovna dostopnost |
+| 4 | **Varnost & GDPR** | 15% | Skladnost in zaščita |
+| 5 | **Hitrost/Performance** | 10% | Odzivnost in skalabilnost |
+| 6 | **Integracije** | 5% | API in povezljivost |
+| 7 | **Uporabniška izkušnja** | 5% | UI/UX kakovost |
+| 8 | **Podpora & Dokumentacija** | 5% | Pomoč uporabnikom |
+
+---
+
+### 39.2 Competitor Profiles
+
+#### A) RAYYAN
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           RAYYAN PROFILE                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Podjetje:           Qatar Computing Research Institute (QCRI)             │
+│  Ustanovitev:        2016                                                   │
+│  Uporabniki:         1,000,000+ (lastna trditev)                           │
+│  Primarni fokus:     Abstract screening za systematic reviews              │
+│  Target segment:     Akademiki, medicinski raziskovalci                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  CENE (april 2026):                                                         │
+│  ├── Free:      3 reviews, 2 reviewers, basic features                     │
+│  ├── Essential: $4.99/seat/mo ($59.88/leto) - 5 reviewers, PRISMA          │
+│  ├── Advanced:  $8.33/seat/mo ($99.99/leto) - 9 reviews, PICO, AI          │
+│  └── Business:  Po dogovoru - department/institution                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  PREDNOSTI:                                                                  │
+│  ✅ Zelo dober brezplačni tier                                              │
+│  ✅ Odlično prepoznavanje duplikatov                                        │
+│  ✅ Mobilna aplikacija                                                      │
+│  ✅ Velik ecosystem in community                                            │
+│  ✅ PRISMA diagram generator                                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  SLABOSTI:                                                                   │
+│  ❌ NI full-text analize                                                    │
+│  ❌ NI generacije članka                                                    │
+│  ❌ AI samo za screening, ne za pisanje                                     │
+│  ❌ Omejena vizualizacija                                                  │
+│  ❌ Ni RAG/chatbot                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### B) COVIDENCE
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          COVIDENCE PROFILE                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Podjetje:           Covidence (Veritas Health Innovation)                  │
+│  Ustanovitev:        2013                                                   │
+│  Uporabniki:         600,000+ claimed                                       │
+│  Primarni fokus:     Cochrane-grade systematic review workflow             │
+│  Target segment:     Medicinski raziskovalci, Evidence synthesis teams     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  CENE (april 2026):                                                         │
+│  ├── Trial:     500 references, time-limited                               │
+│  ├── Single:    $339/review/leto - 1 review, unlimited collaborators       │
+│  ├── Package:   $907/leto - do 3 reviews                                   │
+│  └── Org:       Po pogodbi - unlimited reviews                             │
+│  ⚠️ Cena per-review, NE per-user!                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  PREDNOSTI:                                                                  │
+│  ✅ Cochrane uraden partner                                                 │
+│  ✅ Gold standard workflow                                                  │
+│  ✅ Quality assessment tools                                                │
+│  ✅ RevMan integracija                                                      │
+│  ✅ Data extraction forms                                                   │
+│  ✅ PRISMA generation                                                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  SLABOSTI:                                                                   │
+│  ❌ Drago za multiple reviews                                               │
+│  ❌ NI AI generacije članka                                                 │
+│  ❌ Omejen AI (samo screening prioritization)                              │
+│  ❌ Ni chatbot/RAG                                                          │
+│  ❌ Zastarela UI/UX                                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### C) DISTILLERSR
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         DISTILLERSR PROFILE                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Podjetje:           DistillerSR Inc. (Evidence Partners)                   │
+│  Ustanovitev:        2008                                                   │
+│  Uporabniki:         250+ enterprise customers                              │
+│  Primarni fokus:     Enterprise evidence management                        │
+│  Target segment:     Pharma, Medical Device, Regulatory                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  CENE (april 2026):                                                         │
+│  ├── Academic:   Od $4,000/leto                                            │
+│  ├── Enterprise: $6,000-10,000+/leto                                       │
+│  └── Premium:    Po pogodbi (multi-year deals)                             │
+│  ⚠️ Ciljana za regulatorne use-case (EU-MDR, FDA)                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  PREDNOSTI:                                                                  │
+│  ✅ Enterprise-grade security (SOC 2, HIPAA)                               │
+│  ✅ Regulatory compliance (EU-MDR, FDA)                                    │
+│  ✅ AI-assisted screening                                                  │
+│  ✅ Evidence reuse across projects                                         │
+│  ✅ 24M+ references under management                                       │
+│  ✅ Audit trail for compliance                                             │
+│  ✅ 35-50% time reduction claims                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  SLABOSTI:                                                                   │
+│  ❌ Zelo drago za akademike                                                 │
+│  ❌ NI article generation                                                   │
+│  ❌ Kompleksna konfiguracija                                                │
+│  ❌ Ni chatbot/RAG                                                          │
+│  ❌ Overkill za enostavne scoping reviews                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### D) ASREVIEW
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ASREVIEW PROFILE                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Podjetje:           Utrecht University (Academic project)                  │
+│  Ustanovitev:        2019                                                   │
+│  Uporabniki:         638,000+ installations                                 │
+│  Primarni fokus:     AI-driven abstract screening                          │
+│  Target segment:     Akademiki, open source enthusiasts                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  CENE:                                                                       │
+│  └── FREE - Open source (MIT License)                                      │
+│      Cloud version: Free (asreview.app)                                    │
+│      Self-hosted: Free                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  PREDNOSTI:                                                                  │
+│  ✅ Popolnoma brezplačno                                                    │
+│  ✅ Open source (transparentno)                                            │
+│  ✅ GDPR compliant (self-hosted možnost)                                   │
+│  ✅ Active learning model (učinkovit AI)                                   │
+│  ✅ No tracking cookies                                                     │
+│  ✅ Dobra dokumentacija                                                     │
+│  ✅ Močna akademska skupnost                                               │
+│  ✅ 95% workload reduction claims                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  SLABOSTI:                                                                   │
+│  ❌ SAMO screening (ni full pipeline)                                       │
+│  ❌ NI article generation                                                   │
+│  ❌ Ni data extraction                                                      │
+│  ❌ Ni visualization (PRISMA, etc.)                                        │
+│  ❌ Zahteva tehnično znanje za self-hosting                                │
+│  ❌ Omejena podpora (community-based)                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### E) ELICIT
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ELICIT PROFILE                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Podjetje:           Elicit Inc. (San Francisco)                            │
+│  Ustanovitev:        2021                                                   │
+│  Uporabniki:         200,000+ claimed                                       │
+│  Primarni fokus:     AI research assistant                                  │
+│  Target segment:     Researchers, Pharma, Medtech                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  CENE (april 2026):                                                         │
+│  ├── Basic:     FREE - limited features                                    │
+│  ├── Pro:       $49/user/mo ($588/leto) - SR workflow, 5K papers          │
+│  ├── Scale:     $169/user/mo ($2,028/leto) - collaboration, 240 reports   │
+│  └── Enterprise: Custom - SSO, SAML, 40K papers                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  PREDNOSTI:                                                                  │
+│  ✅ Odličen AI (GPT-based)                                                 │
+│  ✅ 138M+ papers searchable                                                │
+│  ✅ Automated reports                                                       │
+│  ✅ PICO extraction                                                         │
+│  ✅ Chat with papers                                                        │
+│  ✅ Zotero import                                                           │
+│  ✅ API access                                                              │
+│  ✅ Figure extraction (Scale+)                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  SLABOSTI:                                                                   │
+│  ❌ NI scoping review workflow                                              │
+│  ❌ NI full article generation                                              │
+│  ❌ Drago za teamse (Scale tier)                                           │
+│  ❌ Ni PRISMA/visualization                                                │
+│  ❌ More exploration than structured workflow                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 39.3 Category-by-Category Comparison
+
+#### KATEGORIJA 1: FUNKCIONALNOSTI (25%)
+
+```
+┌──────────────────────────────────┬────────┬──────────┬───────────┬─────────┬────────┬─────────────┐
+│ Funkcionalnost                   │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow│
+├──────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ Research plan creation           │   ❌   │    ⚠️    │    ⚠️     │   ❌    │   ❌   │     ✅     │
+│ Search string generation         │   ❌   │    ❌    │    ❌     │   ❌    │   ❌   │     ✅     │
+│ Abstract screening               │   ✅   │    ✅    │    ✅     │   ✅    │   ⚠️   │     ✅     │
+│ Duplicate detection              │   ✅   │    ✅    │    ✅     │   ⚠️    │   ❌   │     ✅     │
+│ Full-text screening              │   ❌   │    ✅    │    ✅     │   ❌    │   ❌   │     ✅     │
+│ Data extraction forms            │   ❌   │    ✅    │    ✅     │   ❌    │   ⚠️   │     ✅     │
+│ Quality assessment (RoB)         │   ❌   │    ✅    │    ✅     │   ❌    │   ❌   │     ⚠️     │
+│ ARTICLE GENERATION               │   ❌   │    ❌    │    ❌     │   ❌    │   ❌   │     ✅ ★   │
+│ PRISMA diagram                   │   ✅   │    ✅    │    ✅     │   ❌    │   ❌   │     ✅     │
+│ Evidence gap map                 │   ❌   │    ❌    │    ⚠️     │   ❌    │   ❌   │     ✅     │
+│ Other visualizations             │   ❌   │    ⚠️    │    ⚠️     │   ⚠️    │   ❌   │     ✅     │
+│ PDF export                       │   ❌   │    ⚠️    │    ✅     │   ❌    │   ❌   │     ✅     │
+│ BibTeX/RIS export                │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ HITL workflow                    │   ⚠️   │    ✅    │    ✅     │   ⚠️    │   ❌   │     ✅     │
+├──────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ TOTAL (✅=2, ⚠️=1, ❌=0)         │   9    │    14    │    15     │    6    │   4    │     26 ★   │
+│ SCORE (0-10)                     │  3.2   │   5.0    │   5.4     │   2.1   │  1.4   │    9.3 ★   │
+└──────────────────────────────────┴────────┴──────────┴───────────┴─────────┴────────┴─────────────┘
+
+Legend: ✅ = Full (2pts) | ⚠️ = Partial (1pt) | ❌ = No (0pts) | ★ = Unique advantage
+```
+
+#### KATEGORIJA 2: AI ZMOGLJIVOSTI (20%)
+
+```
+┌──────────────────────────────────┬────────┬──────────┬───────────┬─────────┬────────┬─────────────┐
+│ AI Feature                       │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow│
+├──────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ AI screening prioritization      │   ✅   │    ⚠️    │    ✅     │   ✅    │   ⚠️   │     ✅     │
+│ Active learning                  │   ⚠️   │    ❌    │    ✅     │   ✅    │   ❌   │     ✅     │
+│ PICO extraction                  │   ✅   │    ❌    │    ⚠️     │   ❌    │   ✅   │     ✅     │
+│ AI summarization                 │   ❌   │    ❌    │    ❌     │   ❌    │   ✅   │     ✅     │
+│ AI article WRITING               │   ❌   │    ❌    │    ❌     │   ❌    │   ❌   │     ✅ ★   │
+│ RAG/Chatbot                      │   ❌   │    ❌    │    ❌     │   ❌    │   ✅   │     ✅     │
+│ Fact-checking                    │   ❌   │    ❌    │    ❌     │   ❌    │   ⚠️   │     ✅     │
+│ Citation generation              │   ❌   │    ❌    │    ❌     │   ❌    │   ⚠️   │     ✅     │
+│ Semantic search                  │   ❌   │    ❌    │    ⚠️     │   ❌    │   ✅   │     ✅     │
+│ LLM model (state-of-art)         │   ⚠️   │    ❌    │    ⚠️     │   ⚠️    │   ✅   │     ✅     │
+│ Reasoning traces visible         │   ❌   │    ❌    │    ❌     │   ⚠️    │   ⚠️   │     ✅ ★   │
+│ Hallucination mitigation         │   N/A  │   N/A    │    ⚠️     │   ⚠️    │   ⚠️   │     ✅     │
+├──────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ TOTAL                            │   6    │    1     │    8      │    7    │   12   │     22 ★   │
+│ SCORE (0-10)                     │  2.5   │   0.4    │   3.3     │   2.9   │  5.0   │    9.2 ★   │
+└──────────────────────────────────┴────────┴──────────┴───────────┴─────────┴────────┴─────────────┘
+```
+
+#### KATEGORIJA 3: CENA IN VREDNOST (15%)
+
+```
+┌───────────────────────────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬─────────────┐
+│ Pricing Aspect                    │   Rayyan   │  Covidence │ DistillerSR│  ASReview  │   Elicit   │ ResearchFlow│
+├───────────────────────────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼─────────────┤
+│ Free tier available               │     ✅     │     ⚠️     │     ❌     │     ✅     │     ✅     │     ✅     │
+│ Free tier usability               │    Good    │   Limited  │    None    │  Excellent │   Limited  │    Good     │
+│ Entry price (annual)              │    $60     │    $339    │  $4,000+   │     $0     │    $588    │    $350     │
+│ Mid-tier price (annual)           │   $100     │    $907    │  $6,000+   │     $0     │   $2,028   │    $600     │
+│ Enterprise price                  │  Custom    │   Custom   │  $10,000+  │     $0     │   Custom   │   $1,200    │
+│ Per-seat vs per-project           │  Per-seat  │ Per-review │  Per-org   │    Free    │  Per-seat  │  Per-seat   │
+│ Student discount                  │     ⚠️     │     ✅     │     ❌     │     ✅     │     ❌     │     ✅     │
+│ Value for money (full pipeline)   │     3      │      5     │      5     │      4     │      4     │      9 ★    │
+│ Transparent pricing               │     ✅     │     ✅     │     ❌     │     ✅     │     ✅     │     ✅     │
+├───────────────────────────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼─────────────┤
+│ SCORE (0-10)                      │    7.0     │    4.5     │    2.0     │    9.5 ★   │    5.0     │    8.5      │
+└───────────────────────────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴─────────────┘
+
+💡 Opomba: ASReview ima najboljšo ceno (brezplačno), a omejen obseg funkcij.
+   ResearchFlow ponuja najboljše razmerje med ceno in funkcionalnostjo.
+```
+
+#### KATEGORIJA 4: VARNOST IN GDPR (15%)
+
+```
+┌───────────────────────────────────┬────────┬──────────┬───────────┬─────────┬────────┬─────────────┐
+│ Security Feature                  │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow│
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ GDPR compliant                    │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ EU data residency                 │   ❌   │    ⚠️    │    ⚠️     │   ✅    │   ❌   │     ✅ ★   │
+│ SOC 2 certified                   │   ❌   │    ⚠️    │    ✅     │   N/A   │   ⚠️   │     ⚠️     │
+│ HIPAA compliant                   │   ❌   │    ❌    │    ✅     │   N/A   │   ⚠️   │     ⚠️     │
+│ SSL/TLS encryption                │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ Encryption at rest                │   ⚠️   │    ✅    │    ✅     │   ⚠️    │   ✅   │     ✅     │
+│ MFA support                       │   ❌   │    ⚠️    │    ✅     │   ❌    │   ✅   │     ✅     │
+│ SSO/SAML (Enterprise)             │   ❌   │    ❌    │    ✅     │   ❌    │   ✅   │     ⚠️     │
+│ Audit logging                     │   ❌   │    ⚠️    │    ✅     │   ⚠️    │   ⚠️   │     ✅     │
+│ Data export (portability)         │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ Right to deletion                 │   ⚠️   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ AI data usage transparency        │   ❌   │   N/A    │    ⚠️     │   ✅    │   ⚠️   │     ✅ ★   │
+│ Self-hosted option                │   ❌   │    ❌    │    ❌     │   ✅    │   ❌   │     ❌     │
+│ No tracking cookies               │   ❌   │    ❌    │    ❌     │   ✅    │   ❌   │     ✅     │
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ TOTAL                             │   8    │    12    │    18     │   14    │   13   │     19 ★   │
+│ SCORE (0-10)                      │  2.9   │   4.3    │   6.4     │   5.0   │  4.6   │    6.8 ★   │
+└───────────────────────────────────┴────────┴──────────┴───────────┴─────────┴────────┴─────────────┘
+```
+
+#### KATEGORIJA 5: HITROST IN PERFORMANCE (10%)
+
+```
+┌───────────────────────────────────┬────────┬──────────┬───────────┬─────────┬────────┬─────────────┐
+│ Performance Metric                │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow│
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ Page load time                    │  Good  │  Medium  │   Medium  │  Good   │  Good  │    Good     │
+│ Screening speed (UX)              │  Fast  │  Medium  │   Medium  │  Fast   │  N/A   │    Fast     │
+│ Large dataset handling (10K+)     │   ⚠️   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ Cloud-native (auto-scaling)       │   ✅   │    ✅    │    ✅     │   ⚠️    │   ✅   │     ✅     │
+│ Batch processing                  │   ⚠️   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ AI response latency               │  ~2s   │   N/A    │   ~3s     │  ~1s    │  ~2s   │    ~2-3s    │
+│ Export generation speed           │  Fast  │  Medium  │   Medium  │  Fast   │  Fast  │    Medium   │
+│ Mobile performance                │   ✅   │    ⚠️    │    ❌     │   ❌    │   ⚠️   │     ⚠️     │
+│ Offline capability                │   ❌   │    ❌    │    ❌     │   ✅    │   ❌   │     ❌     │
+│ Concurrent users support          │  High  │  Medium  │   High    │ Medium  │  High  │    High     │
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ SCORE (0-10)                      │  6.5   │   6.0    │   6.5     │   7.0   │  7.0   │    7.0      │
+└───────────────────────────────────┴────────┴──────────┴───────────┴─────────┴────────┴─────────────┘
+```
+
+#### KATEGORIJA 6: INTEGRACIJE (5%)
+
+```
+┌───────────────────────────────────┬────────┬──────────┬───────────┬─────────┬────────┬─────────────┐
+│ Integration                       │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow│
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ Zotero                            │   ✅   │    ✅    │    ✅     │   ⚠️    │   ✅   │     ✅     │
+│ Mendeley                          │   ✅   │    ✅    │    ✅     │   ⚠️    │   ⚠️   │     ✅     │
+│ EndNote                           │   ✅   │    ✅    │    ✅     │   ⚠️    │   ⚠️   │     ⚠️     │
+│ PubMed import                     │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ RIS/BibTeX import                 │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ RevMan (Cochrane)                 │   ⚠️   │    ✅    │    ✅     │   ❌    │   ❌   │     ⚠️     │
+│ WoS API                           │   ❌   │    ❌    │    ⚠️     │   ❌    │   ⚠️   │     ✅ ★   │
+│ Scopus API                        │   ❌   │    ❌    │    ⚠️     │   ❌    │   ⚠️   │     ⚠️     │
+│ CrossRef/DOI                      │   ⚠️   │    ⚠️    │    ✅     │   ⚠️    │   ✅   │     ✅     │
+│ Public API available              │   ❌   │    ❌    │    ✅     │   ✅    │   ✅   │     ✅     │
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ SCORE (0-10)                      │  6.0   │   6.5    │   8.0     │   5.0   │  6.5   │    8.0      │
+└───────────────────────────────────┴────────┴──────────┴───────────┴─────────┴────────┴─────────────┘
+```
+
+#### KATEGORIJA 7: UPORABNIŠKA IZKUŠNJA (5%)
+
+```
+┌───────────────────────────────────┬────────┬──────────┬───────────┬─────────┬────────┬─────────────┐
+│ UX Aspect                         │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow│
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ Modern UI design                  │   ✅   │    ⚠️    │    ⚠️     │   ✅    │   ✅   │     ✅     │
+│ Learning curve                    │  Easy  │  Medium  │   Hard    │  Easy   │  Easy  │   Medium    │
+│ Onboarding experience             │   ✅   │    ✅    │    ✅     │   ⚠️    │   ✅   │     ✅     │
+│ Keyboard shortcuts                │   ✅   │    ⚠️    │    ⚠️     │   ✅    │   ⚠️   │     ✅     │
+│ Dark mode                         │   ✅   │    ❌    │    ❌     │   ⚠️    │   ✅   │     ✅     │
+│ Accessibility (WCAG)              │   ⚠️   │    ⚠️    │    ✅     │   ⚠️    │   ⚠️   │     ✅     │
+│ Mobile app                        │   ✅   │    ⚠️    │    ❌     │   ❌    │   ⚠️   │     ⚠️     │
+│ Intuitive navigation              │   ✅   │    ⚠️    │    ⚠️     │   ✅    │   ✅   │     ✅     │
+│ Error messages clarity            │   ⚠️   │    ⚠️    │    ✅     │   ⚠️    │   ✅   │     ✅     │
+│ Progress indicators               │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ SCORE (0-10)                      │  8.0   │   5.5    │   5.5     │   6.5   │  7.5   │    8.5 ★   │
+└───────────────────────────────────┴────────┴──────────┴───────────┴─────────┴────────┴─────────────┘
+```
+
+#### KATEGORIJA 8: PODPORA IN DOKUMENTACIJA (5%)
+
+```
+┌───────────────────────────────────┬────────┬──────────┬───────────┬─────────┬────────┬─────────────┐
+│ Support Aspect                    │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow│
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ Documentation quality             │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ✅     │
+│ Video tutorials                   │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ⚠️     │
+│ Knowledge base                    │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ⚠️     │
+│ Email support                     │   ✅   │    ✅    │    ✅     │   ⚠️    │   ✅   │     ✅     │
+│ Live chat                         │   ⚠️   │    ⚠️    │    ✅     │   ❌    │   ⚠️   │     ❌     │
+│ Phone support                     │   ❌   │    ❌    │    ✅     │   ❌    │   ❌   │     ❌     │
+│ Community forum                   │   ⚠️   │    ⚠️    │    ⚠️     │   ✅    │   ⚠️   │     ⚠️     │
+│ Training webinars                 │   ✅   │    ✅    │    ✅     │   ✅    │   ✅   │     ⚠️     │
+│ Response time (SLA)               │  24-48h│   24h    │   <4h     │  Varies │  24h   │    24-48h   │
+│ Dedicated support (Enterprise)    │   ⚠️   │    ⚠️    │    ✅     │   ❌    │   ✅   │     ⚠️     │
+├───────────────────────────────────┼────────┼──────────┼───────────┼─────────┼────────┼─────────────┤
+│ SCORE (0-10)                      │  7.0   │   7.0    │   9.0 ★   │   6.0   │  7.5   │    5.5      │
+└───────────────────────────────────┴────────┴──────────┴───────────┴─────────┴────────┴─────────────┘
+```
+
+---
+
+### 39.4 Weighted Total Score
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                              WEIGHTED TOTAL SCORE CALCULATION                                    │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                  │
+│  Category          │ Weight │ Rayyan │ Covidence│ DistillerSR│ ASReview│ Elicit │ ResearchFlow │
+│  ──────────────────┼────────┼────────┼──────────┼────────────┼─────────┼────────┼──────────────│
+│  Funkcionalnosti   │  25%   │  3.2   │   5.0    │    5.4     │   2.1   │  1.4   │    9.3       │
+│  AI zmogljivosti   │  20%   │  2.5   │   0.4    │    3.3     │   2.9   │  5.0   │    9.2       │
+│  Cena/Vrednost     │  15%   │  7.0   │   4.5    │    2.0     │   9.5   │  5.0   │    8.5       │
+│  Varnost/GDPR      │  15%   │  2.9   │   4.3    │    6.4     │   5.0   │  4.6   │    6.8       │
+│  Hitrost           │  10%   │  6.5   │   6.0    │    6.5     │   7.0   │  7.0   │    7.0       │
+│  Integracije       │   5%   │  6.0   │   6.5    │    8.0     │   5.0   │  6.5   │    8.0       │
+│  UX                │   5%   │  8.0   │   5.5    │    5.5     │   6.5   │  7.5   │    8.5       │
+│  Podpora           │   5%   │  7.0   │   7.0    │    9.0     │   6.0   │  7.5   │    5.5       │
+│  ──────────────────┼────────┼────────┼──────────┼────────────┼─────────┼────────┼──────────────│
+│  WEIGHTED TOTAL    │ 100%   │  4.4   │   4.0    │    4.7     │   4.4   │  4.4   │    8.4 ★★★  │
+│                    │        │        │          │            │         │        │              │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+FORMULA: Σ (Category_Score × Weight)
+```
+
+### 39.5 Radar Chart Comparison (Visual)
+
+```
+                              FUNKCIONALNOSTI (25%)
+                                     10
+                                      │
+                                  8 ──┼── ResearchFlow (9.3)
+                                      │
+                                  6 ──┼
+                                      │──── DistillerSR (5.4)
+                                  4 ──┼──── Covidence (5.0)
+                                      │──── Rayyan (3.2)
+                                  2 ──┼──── ASReview (2.1)
+                                      │──── Elicit (1.4)
+         PODPORA (5%)           0 ────┼──────────────────── AI (20%)
+               │                      │
+         5.5 ──┼                      │──── 9.2 ResearchFlow
+               │                      │
+               │              VARNOST │
+               │              (15%)   │
+               │                      │
+         UX ───┼──────────────────────┼─── CENA (15%)
+        (5%)   │                      │
+               │                      │
+        8.5 ───┼                      ├─── 8.5 ResearchFlow
+               │                      │
+               │         INTEGRACIJE  │
+               │            (5%)      │    HITROST (10%)
+               │                      │
+               └──────────────────────┘
+
+INTERPRETATION:
+ResearchFlow dominira v Funkcionalnostih in AI, z dobrimi ocenami v ostalih kategorijah.
+Konkurenti so specializirani: ASReview v ceni, DistillerSR v varnosti/podpori.
+```
+
+---
+
+### 39.6 Competitive Advantages Summary
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                            RESEARCHFLOW COMPETITIVE ADVANTAGES                                   │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                 │
+│  🏆 UNIQUE CAPABILITIES (Nobeden konkurent nima):                                              │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                                │
+│  1. AI-powered FULL ARTICLE GENERATION                                                         │
+│  2. End-to-end pipeline (Research plan → Publication-ready PDF)                               │
+│  3. RAG chatbot with access to ALL project documents                                          │
+│  4. Visible reasoning traces for every AI decision                                            │
+│  5. 10 HITL decision points throughout workflow                                               │
+│                                                                                                 │
+│  💪 STRONG ADVANTAGES (Boljši od večine):                                                      │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                                     │
+│  • EU data residency (GDPR native)                                                            │
+│  • WoS API integration for automated abstract export                                          │
+│  • Modern visualization suite (PRISMA, Evidence Gap Map, etc.)                               │
+│  • Competitive pricing ($29-99/mo vs $339+ per review)                                        │
+│  • State-of-the-art LLM (Gemini 2.5)                                                          │
+│                                                                                                 │
+│  ⚠️ AREAS FOR IMPROVEMENT (Konkurenti boljši):                                                │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                                  │
+│  • Support/Documentation: DistillerSR ima 24/7 + phone support                               │
+│  • SOC 2/HIPAA certification: DistillerSR fully certified                                    │
+│  • Mobile app: Rayyan has native mobile app                                                  │
+│  • Community size: Rayyan (1M+), ASReview (638K installations)                              │
+│  • Enterprise features: DistillerSR has regulatory compliance                               │
+│                                                                                                 │
+│  📊 FINAL POSITIONING:                                                                         │
+│  ━━━━━━━━━━━━━━━━━━━━━                                                                        │
+│  • Overall Score: 8.4/10 (Highest among all competitors)                                     │
+│  • Category: S-Tier (Category Creator)                                                        │
+│  • Best for: Researchers who need FULL automation with human control                         │
+│  • Not ideal for: Enterprises needing regulatory compliance (use DistillerSR)               │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 39.7 Decision Matrix: When to Choose Which Tool
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                              DECISION MATRIX: WHICH TOOL TO USE?                                │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                 │
+│  IF you need...                           │ THEN use...      │ Why?                            │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  Full pipeline + AI article generation    │ ResearchFlow ★   │ Only option available          │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  Free screening for simple review         │ Rayyan / ASReview│ Good free tiers                │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  Cochrane-grade SR with audit trail       │ Covidence        │ Cochrane partner               │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  Regulatory compliance (EU-MDR, FDA)      │ DistillerSR      │ SOC2, HIPAA certified          │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  AI research exploration/brainstorming    │ Elicit           │ Best conversational AI         │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  Self-hosted + privacy-critical           │ ASReview         │ Open source, local install     │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  PhD student on a budget                  │ ASReview/Rayyan  │ Free, then ResearchFlow Pro    │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  Team collaboration on SR                 │ Covidence/Distil │ Mature team features           │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│  SCOPING REVIEW with article draft        │ ResearchFlow ★★  │ Purpose-built for this         │
+│  ─────────────────────────────────────────┼──────────────────┼─────────────────────────────────│
+│                                                                                                 │
+│  ★ = ResearchFlow is the best choice                                                          │
+│  ★★ = ResearchFlow is the ONLY choice (no competition)                                        │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 **Dokument pripravil:** Claude (AI Assistant)  
 **Za potrditev:** [Ime raziskovalca]  
 **Datum:** April 2026
-**Verzija:** 2.2
+**Verzija:** 2.3
