@@ -2,9 +2,23 @@
 
 ## Architecture & Implementation Plan
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Date:** April 2026  
-**Status:** PENDING APPROVAL
+**Status:** REVISED - Critical Review Applied
+
+### Changelog v2.0
+- Added Full-text Screening phase (Phase 4.5)
+- Added GDPR compliance section
+- Added Cost estimation
+- Added Disaster Recovery plan
+- Added Observability/Monitoring specification
+- Added API versioning (/api/v1/)
+- Added Accessibility (WCAG 2.1 AA) requirements
+- Enhanced security with LLM-based content moderation
+- Extended timeline to 20 weeks (realistic)
+- Added Multi-user collaboration support
+- Added Document versioning
+- Added Integration endpoints (Zotero, DOI resolution)
 
 ---
 
@@ -724,46 +738,68 @@ resource "google_storage_bucket" "documents" {
 - [ ] HITL decision panels
 - [ ] Document explorer
 
-### Phase 5: Integration (Weeks 9-10)
+### Phase 5: Integration (Weeks 9-11)
 - [ ] Statistics dashboard
 - [ ] Agent monitoring
 - [ ] Source citations display
 - [ ] Visualization generation
 - [ ] Export functionality
+- [ ] Document versioning system
+- [ ] Multi-user collaboration (reviewer roles)
 
-### Phase 6: Security & Polish (Weeks 11-12)
-- [ ] Prompt injection protection
+### Phase 6: Security & Polish (Weeks 12-14)
+- [ ] Prompt injection protection (regex + LLM-based)
 - [ ] Input validation
-- [ ] Rate limiting
+- [ ] Rate limiting (per-user, per-project)
 - [ ] Error handling
 - [ ] Performance optimization
+- [ ] Audit logging implementation
+- [ ] GDPR compliance features
 
-### Phase 7: Testing & Launch (Weeks 13-14)
+### Phase 7: Testing & QA (Weeks 15-17)
+- [ ] Unit tests (80%+ coverage)
 - [ ] Integration testing
+- [ ] Security penetration testing
+- [ ] Accessibility audit (WCAG 2.1 AA)
+- [ ] Load testing (100+ concurrent users)
+- [ ] Cross-browser testing
+
+### Phase 8: Launch Preparation (Weeks 18-20)
 - [ ] User acceptance testing
 - [ ] Documentation completion
-- [ ] Beta launch
-- [ ] Monitoring setup
+- [ ] Monitoring/alerting setup
+- [ ] Disaster recovery testing
+- [ ] Beta launch (limited users)
+- [ ] Production launch
 
 ---
 
 ## 9. API Endpoints
 
-### 9.1 Core Endpoints
+### 9.1 Core Endpoints (v1)
 
 ```
+# Health & System
+GET    /health                    # Liveness probe
+GET    /ready                     # Readiness probe
+GET    /api/v1/version            # API version info
+
 # Authentication
-POST   /api/auth/login
-POST   /api/auth/register
-POST   /api/auth/refresh
-DELETE /api/auth/logout
+POST   /api/v1/auth/login
+POST   /api/v1/auth/register
+POST   /api/v1/auth/refresh
+DELETE /api/v1/auth/logout
+POST   /api/v1/auth/mfa/setup
+POST   /api/v1/auth/mfa/verify
 
 # Projects
-GET    /api/projects
-POST   /api/projects
-GET    /api/projects/{id}
-PUT    /api/projects/{id}
-DELETE /api/projects/{id}
+GET    /api/v1/projects
+POST   /api/v1/projects
+GET    /api/v1/projects/{id}
+PUT    /api/v1/projects/{id}
+DELETE /api/v1/projects/{id}
+GET    /api/v1/projects/{id}/collaborators
+POST   /api/v1/projects/{id}/collaborators/invite
 
 # Research Plan
 GET    /api/projects/{id}/plan
@@ -854,6 +890,475 @@ Pred implementacijo prosim potrdi naslednje točke:
 4. **Prioritete:** Ali se strinjate z vrstnim redom implementacijskih faz?
 
 5. **Varnost:** Ali so varnostni ukrepi zadostni za komercialno rabo?
+
+---
+
+## 12. GDPR Compliance
+
+### 12.1 Data Classification
+
+| Kategorija | Podatki | Retencija | Šifriranje |
+|------------|---------|-----------|------------|
+| **Osebni** | Email, ime | Do izbrisa računa | AES-256 |
+| **Projektni** | Dokumenti, drafts | 5 let po zadnji aktivnosti | AES-256 |
+| **Analitični** | Usage logs | 2 leti | At-rest |
+| **Sistemski** | Error logs | 90 dni | None |
+
+### 12.2 User Rights Implementation
+
+```python
+# GDPR API Endpoints
+GET    /api/v1/user/data-export     # Right to access
+POST   /api/v1/user/data-delete     # Right to be forgotten
+PUT    /api/v1/user/data-restrict   # Right to restrict processing
+GET    /api/v1/user/data-portability # Right to data portability
+
+class GDPRService:
+    async def export_user_data(self, user_id: str) -> dict:
+        """Export all user data in JSON format."""
+        return {
+            "profile": await self.get_profile(user_id),
+            "projects": await self.get_all_projects(user_id),
+            "chat_history": await self.get_chat_history(user_id),
+            "documents": await self.get_document_metadata(user_id),
+            "audit_log": await self.get_user_actions(user_id)
+        }
+    
+    async def delete_user_data(self, user_id: str) -> bool:
+        """Complete user data deletion (right to be forgotten)."""
+        # 1. Delete from Firestore
+        await self.firestore.delete_user_tree(user_id)
+        # 2. Delete from Cloud Storage
+        await self.storage.delete_user_bucket(user_id)
+        # 3. Delete from ChromaDB
+        await self.vector_db.delete_user_embeddings(user_id)
+        # 4. Anonymize audit logs
+        await self.audit.anonymize_user(user_id)
+        return True
+```
+
+### 12.3 Data Processing Agreement (DPA)
+
+- Google Cloud DPA: Signed automatically via GCP Terms
+- Sub-processors: Vertex AI (Gemini), Firebase Auth
+- Data location: EU (europe-west1) only
+- Transfer mechanisms: Standard Contractual Clauses (SCCs)
+
+---
+
+## 13. Cost Estimation
+
+### 13.1 Monthly Infrastructure Costs (Production)
+
+| Service | Specifikacija | Mesečni strošek |
+|---------|---------------|-----------------|
+| **Cloud Run** | 2 vCPU, 2GB RAM, 100k requests/day | ~$50-80 |
+| **Firestore** | 1M reads, 500k writes, 10GB storage | ~$30-50 |
+| **Cloud Storage** | 100GB storage, 10GB egress | ~$5-10 |
+| **Memorystore Redis** | 1GB instance | ~$35 |
+| **Vertex AI (Gemini)** | ~50k tokens/user/day, 100 users | ~$150-300 |
+| **Firebase Auth** | 100 MAU | Free tier |
+| **Cloud Build** | 120 min/day | Free tier |
+| **Secret Manager** | 10 secrets, 10k accesses | ~$1 |
+| **Cloud Armor** | Basic WAF | ~$5 |
+| **Cloud Monitoring** | Basic tier | Free |
+
+**Total Estimate:** $280-490/month (100 active users)
+
+### 13.2 Per-User Cost Analysis
+
+| Tier | Users | Infra Cost | Per-User |
+|------|-------|------------|----------|
+| Startup | 1-50 | ~$200/mo | $4-200/user |
+| Growth | 50-500 | ~$800/mo | $1.60/user |
+| Enterprise | 500+ | ~$2,500/mo | $0.50/user |
+
+### 13.3 Pricing Model Recommendations
+
+- **Freemium:** 1 project, 10 documents, basic features
+- **Pro ($29/mo):** 5 projects, 100 docs, full features
+- **Team ($99/mo):** 20 projects, collaboration, priority support
+- **Enterprise (Custom):** Unlimited, SLA, dedicated support
+
+---
+
+## 14. Disaster Recovery & Business Continuity
+
+### 14.1 Recovery Objectives
+
+| Metric | Target | Achieved By |
+|--------|--------|-------------|
+| **RPO** (Recovery Point Objective) | 1 hour | Firestore point-in-time recovery |
+| **RTO** (Recovery Time Objective) | 4 hours | Terraform re-deployment |
+| **Availability** | 99.9% | Cloud Run multi-region (future) |
+
+### 14.2 Backup Strategy
+
+```yaml
+# backup-config.yaml
+backups:
+  firestore:
+    frequency: daily
+    retention: 30_days
+    location: europe-west1
+    
+  cloud_storage:
+    versioning: enabled
+    lifecycle:
+      - age: 90_days
+        action: nearline
+      - age: 365_days
+        action: coldline
+        
+  redis:
+    persistence: RDB
+    snapshot_frequency: hourly
+```
+
+### 14.3 Failover Procedure
+
+1. **Detection:** Cloud Monitoring alerts (< 5 min)
+2. **Assessment:** On-call engineer evaluates scope
+3. **Failover:** 
+   - If region failure → Deploy to europe-west4 (Netherlands)
+   - If service failure → Scale up replicas + restart
+4. **Recovery:** Restore from Firestore backup if needed
+5. **Post-mortem:** Document incident within 48 hours
+
+---
+
+## 15. Observability & Monitoring
+
+### 15.1 Metrics to Track
+
+```yaml
+# metrics.yaml
+application:
+  - request_latency_p99
+  - request_error_rate
+  - active_users
+  - projects_created_daily
+  - documents_processed_daily
+  - agent_execution_time
+  - hitl_decision_turnaround
+
+llm:
+  - vertex_ai_latency
+  - tokens_consumed_per_request
+  - prompt_injection_attempts
+  - content_safety_violations
+
+infrastructure:
+  - cloud_run_cpu_utilization
+  - cloud_run_memory_utilization
+  - firestore_read_latency
+  - redis_connection_count
+```
+
+### 15.2 Alerting Rules
+
+| Alert | Condition | Severity | Action |
+|-------|-----------|----------|--------|
+| High Error Rate | > 5% 5xx errors in 5 min | Critical | Page on-call |
+| Slow Responses | p99 > 3s for 10 min | Warning | Slack notification |
+| LLM Failures | > 10 Vertex AI errors in 1 min | Critical | Page + fallback |
+| Security Event | Injection attempt detected | High | Slack + log |
+| Cost Spike | Daily spend > 150% normal | Medium | Email alert |
+
+### 15.3 Dashboards
+
+- **Operations Dashboard:** Request rate, latency, errors, uptime
+- **User Analytics:** Active users, feature usage, conversion
+- **LLM Analytics:** Token usage, cost, latency per model
+- **Security Dashboard:** Auth failures, injection attempts, WAF blocks
+
+---
+
+## 16. Accessibility Requirements (WCAG 2.1 AA)
+
+### 16.1 Implementation Checklist
+
+```markdown
+## Perceivable
+- [ ] All images have alt text
+- [ ] Color contrast ratio ≥ 4.5:1 (text) / 3:1 (large text)
+- [ ] Content readable at 200% zoom
+- [ ] Captions for video content (if any)
+
+## Operable
+- [ ] All functionality keyboard accessible
+- [ ] Focus indicators visible
+- [ ] Skip navigation links
+- [ ] No timing-dependent interactions (or adjustable)
+
+## Understandable
+- [ ] Consistent navigation across pages
+- [ ] Form error messages descriptive
+- [ ] Labels associated with inputs
+
+## Robust
+- [ ] Valid HTML markup
+- [ ] ARIA roles where needed
+- [ ] Screen reader tested (NVDA, VoiceOver)
+```
+
+### 16.2 Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl/Cmd + /` | Open command palette |
+| `Ctrl/Cmd + K` | Focus chat input |
+| `Ctrl/Cmd + S` | Save current draft |
+| `Ctrl/Cmd + E` | Export dialog |
+| `Esc` | Close modal/panel |
+| `Tab` | Navigate between panels |
+| `Enter` | Confirm HITL decision |
+
+---
+
+## 17. External Integrations
+
+### 17.1 Reference Manager Integration
+
+```python
+# Zotero Integration
+class ZoteroIntegration:
+    async def import_collection(self, api_key: str, collection_id: str) -> List[Document]:
+        """Import references from Zotero collection."""
+        pass
+    
+    async def export_to_zotero(self, documents: List[Document], api_key: str) -> bool:
+        """Export reviewed documents back to Zotero."""
+        pass
+
+# Mendeley Integration
+class MendeleyIntegration:
+    async def import_folder(self, access_token: str, folder_id: str) -> List[Document]:
+        """Import references from Mendeley folder."""
+        pass
+```
+
+### 17.2 DOI/PMID Resolution
+
+```python
+class MetadataResolver:
+    async def resolve_doi(self, doi: str) -> dict:
+        """Resolve DOI to full citation metadata via CrossRef."""
+        url = f"https://api.crossref.org/works/{doi}"
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+            return response.json()["message"]
+    
+    async def resolve_pmid(self, pmid: str) -> dict:
+        """Resolve PMID to metadata via PubMed API."""
+        url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        params = {"db": "pubmed", "id": pmid, "retmode": "xml"}
+        # ... implementation
+        pass
+```
+
+### 17.3 Export Formats
+
+| Format | Description | Use Case |
+|--------|-------------|----------|
+| **PDF** | Full article with figures | Final submission |
+| **DOCX** | Editable Word format | Revisions |
+| **LaTeX** | Academic typesetting | Journal formatting |
+| **BibTeX** | Reference bibliography | Citation management |
+| **PRISMA-ScR** | Scoping review checklist | Methodology compliance |
+| **RIS** | Reference interchange | Import to EndNote |
+
+---
+
+## 18. Security Enhancements (v2.0)
+
+### 18.1 LLM-Based Content Moderation
+
+```python
+class EnhancedPromptGuard:
+    """
+    Two-layer prompt injection protection:
+    1. Regex-based (fast, catches common patterns)
+    2. LLM-based (slower, catches semantic attacks)
+    """
+    
+    REGEX_PATTERNS = [
+        r"ignore\s+previous\s+instructions",
+        r"system\s*:\s*",
+        r"<\s*system\s*>",
+        # ... existing patterns
+    ]
+    
+    async def validate(self, user_input: str) -> ValidationResult:
+        # Layer 1: Fast regex check
+        for pattern in self.REGEX_PATTERNS:
+            if re.search(pattern, user_input, re.IGNORECASE):
+                return ValidationResult(safe=False, reason="Regex match")
+        
+        # Layer 2: LLM-based semantic analysis
+        prompt = f"""
+        Analyze if this user input contains prompt injection attempts:
+        
+        Input: {user_input}
+        
+        Respond with JSON: {{"safe": true/false, "reason": "..."}}
+        """
+        
+        response = await self.vertex_ai.generate(prompt, model="gemini-2.5-flash")
+        return ValidationResult.from_json(response)
+```
+
+### 18.2 Audit Logging
+
+```python
+class AuditLogger:
+    async def log(self, event: AuditEvent):
+        """Log security-relevant events to Firestore + BigQuery."""
+        entry = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "user_id": event.user_id,
+            "action": event.action,  # e.g., "project.create", "document.delete"
+            "resource": event.resource,
+            "ip_address": event.ip,
+            "user_agent": event.user_agent,
+            "outcome": event.outcome,  # "success" | "failure"
+            "details": event.details
+        }
+        
+        await self.firestore.collection("audit_logs").add(entry)
+        await self.bigquery.stream_insert("audit_logs", entry)
+```
+
+### 18.3 Rate Limiting Specification
+
+| Endpoint | Limit | Window | Per |
+|----------|-------|--------|-----|
+| `/api/v1/auth/*` | 10 | 1 min | IP |
+| `/api/v1/chat` | 30 | 1 min | User |
+| `/api/v1/projects/*/article/generate` | 5 | 1 hour | Project |
+| `/api/v1/export/*` | 10 | 1 hour | User |
+| `*` (default) | 100 | 1 min | User |
+
+---
+
+## 19. Multi-User Collaboration
+
+### 19.1 Role Definitions
+
+| Role | Permissions |
+|------|-------------|
+| **Owner** | Full access, delete project, manage team |
+| **Editor** | Edit documents, approve HITL, generate articles |
+| **Reviewer** | View, comment, approve screening decisions |
+| **Viewer** | Read-only access to all content |
+
+### 19.2 Collaboration Features
+
+- **Real-time presence:** See who's viewing which document
+- **Conflict resolution:** Last-write-wins with version history
+- **Comments/Annotations:** Thread-based discussions on documents
+- **Activity feed:** Timeline of all project changes
+- **Notifications:** Email/in-app for mentions and decisions
+
+---
+
+## 20. Document Versioning
+
+### 20.1 Version Control for Articles
+
+```python
+class DocumentVersioning:
+    async def save_version(self, project_id: str, content: str, author: str):
+        """Save new version of article draft."""
+        version = {
+            "version_number": await self.get_next_version(project_id),
+            "content": content,
+            "author": author,
+            "created_at": datetime.utcnow(),
+            "diff_from_previous": self.compute_diff(project_id, content)
+        }
+        await self.firestore.collection(f"projects/{project_id}/versions").add(version)
+    
+    async def restore_version(self, project_id: str, version_number: int) -> str:
+        """Restore article to specific version."""
+        version = await self.get_version(project_id, version_number)
+        return version["content"]
+    
+    async def get_history(self, project_id: str) -> List[dict]:
+        """Get version history with diffs."""
+        return await self.firestore.get_versions(project_id)
+```
+
+### 20.2 Comparison View
+
+- Side-by-side diff viewer for article versions
+- Highlight additions (green), deletions (red)
+- Version timeline with author attribution
+- One-click restore to any previous version
+
+---
+
+## 21. Final Architecture Diagram (v2.0)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                             RESEARCHFLOW ARCHITECTURE v2.0                       │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐   │
+│  │                        FRONTEND (Next.js 14)                              │   │
+│  │  • Responsive (mobile-first)  • Dark mode  • WCAG 2.1 AA  • PWA         │   │
+│  └──────────────────────────────────────────────────────────────────────────┘   │
+│                                      │                                           │
+│                                      ▼                                           │
+│  ┌──────────────────────────────────────────────────────────────────────────┐   │
+│  │                  API GATEWAY (Cloud Run) - /api/v1/*                      │   │
+│  │  • Rate limiting  • Request validation  • Audit logging  • CORS          │   │
+│  └──────────────────────────────────────────────────────────────────────────┘   │
+│                                      │                                           │
+│       ┌──────────────────────────────┼──────────────────────────────┐           │
+│       ▼                              ▼                              ▼           │
+│  ┌──────────┐                 ┌──────────┐                  ┌──────────┐        │
+│  │ Firebase │                 │ Pub/Sub  │                  │  Cloud   │        │
+│  │   Auth   │                 │ (Events) │                  │   Tasks  │        │
+│  └──────────┘                 └──────────┘                  └──────────┘        │
+│                                      │                                           │
+│           ┌──────────────────────────┼──────────────────────────────┐           │
+│           ▼                          ▼                              ▼           │
+│  ┌────────────────┐   ┌────────────────────┐   ┌────────────────────────┐       │
+│  │ ORCHESTRATION  │   │    RAG SERVICE     │   │     AGENT CLUSTER      │       │
+│  │    SERVICE     │   │                    │   │                        │       │
+│  │                │   │ • ChromaDB         │   │ • Research Cluster     │       │
+│  │ • Workflow     │   │ • Hybrid Search    │   │ • Writing Cluster      │       │
+│  │ • State Machine│   │ • Citation Tracker │   │ • Quality Cluster      │       │
+│  │ • HITL Manager │   │                    │   │ • Screening Agent      │       │
+│  └────────────────┘   └────────────────────┘   └────────────────────────┘       │
+│                                      │                                           │
+│           ┌──────────────────────────┼──────────────────────────────┐           │
+│           ▼                          ▼                              ▼           │
+│  ┌────────────────┐   ┌────────────────────┐   ┌────────────────────────┐       │
+│  │  FIRESTORE     │   │   CLOUD STORAGE    │   │     MEMORYSTORE        │       │
+│  │                │   │                    │   │       (Redis)          │       │
+│  │ • Projects     │   │ • PDF Documents    │   │ • Session state        │       │
+│  │ • Users        │   │ • Generated PDFs   │   │ • Rate limit counters  │       │
+│  │ • Audit Logs   │   │ • Backups          │   │ • Cache                │       │
+│  │ • Versions     │   │                    │   │                        │       │
+│  └────────────────┘   └────────────────────┘   └────────────────────────┘       │
+│                                                                                  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐   │
+│  │                         SECURITY LAYER                                    │   │
+│  │  • TLS 1.3  • Cloud Armor WAF  • VPC Service Controls  • Secret Manager │   │
+│  │  • EnhancedPromptGuard (Regex + LLM)  • Input Sanitization              │   │
+│  └──────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐   │
+│  │                       OBSERVABILITY                                       │   │
+│  │  • Cloud Monitoring  • Cloud Logging  • Error Reporting  • Cloud Trace  │   │
+│  │  • Custom Dashboards (Ops, Analytics, Security)  • PagerDuty Integration│   │
+│  └──────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                  │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
 
 6. **Ime:** Ali je "ResearchFlow" ustrezno ime ali predlagate drugega?
 
