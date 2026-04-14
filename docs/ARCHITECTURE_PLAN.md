@@ -2,9 +2,22 @@
 
 ## Architecture & Implementation Plan
 
-**Version:** 2.0  
+**Version:** 2.1  
 **Date:** April 2026  
-**Status:** REVISED - Critical Review Applied
+**Status:** REVISED - Critical Review + SWOT + Risk Analysis Applied
+
+### Changelog v2.1
+- Added SWOT Analysis (Section 22)
+- Added Risk Analysis with Mitigation Strategies (Section 23)
+- Added Competitive Analysis (Section 24)
+- Added Technical Dependencies & Bottlenecks (Section 25)
+- Added MVP Definition (Section 26)
+- Added Success Metrics / KPIs (Section 27)
+- Added Team Requirements (Section 28)
+- Added Legal & IP Considerations (Section 29)
+- Added Go-to-Market Strategy (Section 30)
+- Added Vendor Lock-in Analysis (Section 31)
+- Added Known Limitations & Future Improvements (Section 32)
 
 ### Changelog v2.0
 - Added Full-text Screening phase (Phase 4.5)
@@ -1366,6 +1379,688 @@ class DocumentVersioning:
 
 ---
 
+## 22. SWOT Analysis
+
+### 22.1 SWOT Matrix
+
+```
+┌─────────────────────────────────────┬─────────────────────────────────────┐
+│           STRENGTHS (S)              │           WEAKNESSES (W)            │
+│           Prednosti                  │           Slabosti                  │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│                                     │                                     │
+│ S1. Multi-agent sistem že deluje    │ W1. Odvisnost od enega LLM          │
+│     (prototip dokazan)              │     ponudnika (Vertex AI)           │
+│                                     │                                     │
+│ S2. HITL pristop zagotavlja         │ W2. Kompleksna arhitektura =        │
+│     kakovost in kontrolo            │     višji stroški vzdrževanja       │
+│                                     │                                     │
+│ S3. Cloud-native arhitektura        │ W3. Ni offline načina delovanja     │
+│     (skalabilnost)                  │                                     │
+│                                     │                                     │
+│ S4. RAG sistem omogoča              │ W4. PDF parsing ni 100% zanesljiv   │
+│     transparentne vire              │     (posebej za stare skenirane)    │
+│                                     │                                     │
+│ S5. Obstoječa koda za               │ W5. Časovno zahtevna prva           │
+│     vizualizacije                   │     nastavitev projekta             │
+│                                     │                                     │
+│ S6. GDPR-ready zasnova              │ W6. Manjka mobile app               │
+│                                     │                                     │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│         OPPORTUNITIES (O)            │           THREATS (T)               │
+│         Priložnosti                  │           Grožnje                   │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│                                     │                                     │
+│ O1. Rastoč trg AI research          │ T1. Konkurenca velikih igralcev     │
+│     tools (CAGR ~25%)               │     (Elsevier, Clarivate)           │
+│                                     │                                     │
+│ O2. Univerze iščejo avtomatizirane  │ T2. Spremembe v Vertex AI API       │
+│     rešitve za preglede             │     lahko pokvarijo funkcionalnost  │
+│                                     │                                     │
+│ O3. Integracija z akademskimi       │ T3. Regulatorne spremembe           │
+│     založniki (pogodbe)             │     (AI Act, copyright)             │
+│                                     │                                     │
+│ O4. White-label rešitev za          │ T4. Akademiki skeptični do          │
+│     institucije                     │     AI-generiranih vsebin           │
+│                                     │                                     │
+│ O5. Razširitev na meta-analize      │ T5. Stroški Vertex AI lahko         │
+│     in protokole                    │     narastejo nepredvidljivo        │
+│                                     │                                     │
+│ O6. Grant funding za research       │ T6. Hallucination tveganja          │
+│     infrastructure                  │     škodujejo ugledu                │
+│                                     │                                     │
+└─────────────────────────────────────┴─────────────────────────────────────┘
+```
+
+### 22.2 Strategic Implications
+
+| Strategija | Opis | Prioriteta |
+|------------|------|------------|
+| **SO1** | Izkoristi delujoč prototip za hitro pridobitev early adopters na univerzah | HIGH |
+| **SO2** | Ponudi white-label verzijo institucijam z lastnim brandingom | MEDIUM |
+| **WO1** | Dodaj offline mode s sinhronizacijo za raziskovalce na terenu | LOW |
+| **WO2** | Vzpostavi multi-LLM fallback (Gemini → Claude → GPT-4) | HIGH |
+| **ST1** | Pozicioniraj se kot HITL tool, ne "AI replacement" za akademike | HIGH |
+| **ST2** | Vzpostavi cost capping na uporabnika za predvidljivo ceno | MEDIUM |
+| **WT1** | Začni z nizkimi stroški (freemium) da zgradiš trust | HIGH |
+| **WT2** | Transparentno prikaži vse AI-generirane dele z viri | HIGH |
+
+---
+
+## 23. Risk Analysis & Mitigation
+
+### 23.1 Risk Register
+
+| ID | Tveganje | Verjetnost | Vpliv | Score | Mitigation Strategy |
+|----|----------|------------|-------|-------|---------------------|
+| R01 | Vertex AI API breaking changes | Medium | High | 🔴 HIGH | Abstraction layer, verzioniran API, fallback to other LLMs |
+| R02 | Cost overrun na Vertex AI | High | Medium | 🔴 HIGH | Per-user token limits, caching, daily cost alerts |
+| R03 | LLM hallucinations v članku | Medium | Critical | 🔴 HIGH | Fact-checker agent, mandatory citations, HITL review |
+| R04 | Data breach / security incident | Low | Critical | 🟡 MEDIUM | Penetration testing, WAF, encryption, audit logs |
+| R05 | GDPR violation (data handling) | Low | High | 🟡 MEDIUM | DPA signed, EU-only hosting, data retention policies |
+| R06 | PDF parsing failures | High | Low | 🟡 MEDIUM | Multiple parsers (PyMuPDF, pdfplumber), manual upload fallback |
+| R07 | User adoption barrier | Medium | High | 🔴 HIGH | Extensive onboarding, video tutorials, freemium tier |
+| R08 | Competitor launches similar | Medium | Medium | 🟡 MEDIUM | First-mover advantage, focus on HITL differentiation |
+| R09 | Key developer leaves | Medium | High | 🔴 HIGH | Documentation, code reviews, knowledge sharing |
+| R10 | ChromaDB scalability limits | Low | Medium | 🟢 LOW | Migration path to Vertex AI Matching Engine |
+| R11 | Firebase Auth outage | Low | High | 🟡 MEDIUM | Retry logic, graceful degradation, status page |
+| R12 | Academic credibility issues | Medium | Critical | 🔴 HIGH | Peer-reviewed validation study, transparent methodology |
+| R13 | Copyright issues (PDF content) | Medium | High | 🔴 HIGH | User responsibility clause, no PDF redistribution |
+| R14 | Rate limiting by WoS/Scopus | Medium | Medium | 🟡 MEDIUM | User-executed searches, export/import workflow |
+| R15 | Long article generation times | High | Medium | 🟡 MEDIUM | Progress indicators, background processing, email notifications |
+
+### 23.2 Risk Heat Map
+
+```
+           │  Low Impact  │ Medium Impact │ High Impact │ Critical Impact │
+───────────┼──────────────┼───────────────┼─────────────┼─────────────────┤
+High Prob  │              │ R02, R15      │ R07         │                 │
+───────────┼──────────────┼───────────────┼─────────────┼─────────────────┤
+Medium     │              │ R08, R14      │ R01, R09    │ R03, R12        │
+Prob       │              │               │ R13         │                 │
+───────────┼──────────────┼───────────────┼─────────────┼─────────────────┤
+Low Prob   │ R10          │ R06, R11      │ R05         │ R04             │
+───────────┴──────────────┴───────────────┴─────────────┴─────────────────┘
+```
+
+### 23.3 Contingency Plans
+
+**R01 - Vertex AI API Changes:**
+```
+IF Vertex AI introduces breaking changes THEN
+  1. Use abstraction layer to isolate impact
+  2. Activate fallback LLM (Claude via AWS Bedrock)
+  3. Notify users of potential delays
+  4. Migrate within 2-week sprint
+```
+
+**R03 - LLM Hallucinations:**
+```
+IF Hallucination detected (FactChecker fails) THEN
+  1. Flag specific claims in article
+  2. Request HITL verification
+  3. Log incident for model improvement
+  4. Optionally regenerate section with stricter prompts
+```
+
+**R07 - Low User Adoption:**
+```
+IF Monthly active users < 50 after 3 months THEN
+  1. Launch targeted academic marketing campaign
+  2. Partner with specific university department
+  3. Offer free pilot for one scoping review
+  4. Gather feedback and iterate rapidly
+```
+
+---
+
+## 24. Competitive Analysis
+
+### 24.1 Competitor Landscape
+
+| Competitor | Type | Strengths | Weaknesses | Pricing |
+|------------|------|-----------|------------|---------|
+| **Rayyan** | Abstract screening | Large user base, free tier | No AI writing, manual only | Free / $12/mo |
+| **Covidence** | Full SR workflow | Gold standard, integrations | No AI generation, expensive | $240/mo team |
+| **ASReview** | AI screening | Open source, active community | Screening only, no writing | Free |
+| **Elicit** | AI research assistant | Good for exploration | No full article generation | Free / $10/mo |
+| **Semantic Scholar** | Paper discovery | Huge database | Search only, no workflow | Free |
+| **Scholarcy** | Summarization | Quick summaries | No SR methodology | $12/mo |
+| **SciSpace** | AI assistant | Chat with PDFs | No structured workflow | $12/mo |
+| **ResearchRabbit** | Discovery | Visual citation mapping | No screening/writing | Free |
+
+### 24.2 Competitive Positioning
+
+```
+                     HIGH AUTOMATION
+                           │
+                           │   ┌─────────────┐
+                           │   │ ResearchFlow│ ← Target Position
+                           │   │ (Full AI +  │
+                           │   │  HITL)      │
+                           │   └─────────────┘
+                           │
+         ┌─────────────┐   │   ┌─────────────┐
+         │  ASReview   │   │   │   Elicit    │
+         │(AI Screen)  │   │   │ (AI Explore)│
+         └─────────────┘   │   └─────────────┘
+                           │
+    ─────────────────────────────────────────────►
+    MANUAL                 │              FULL WORKFLOW
+    (Single Tool)          │              (End-to-End)
+                           │
+         ┌─────────────┐   │   ┌─────────────┐
+         │   Rayyan    │   │   │  Covidence  │
+         │(Man Screen) │   │   │ (Manual SR) │
+         └─────────────┘   │   └─────────────┘
+                           │
+                     LOW AUTOMATION
+```
+
+### 24.3 Unique Value Proposition (UVP)
+
+> **"ResearchFlow: The only AI platform that writes scoping reviews WITH you, not FOR you."**
+
+Key differentiators:
+1. **Full pipeline** - From research plan to publication-ready PDF
+2. **HITL control** - Researcher always in the driver's seat
+3. **Transparency** - Every claim is traceable to source
+4. **RAG assistant** - Conversational help throughout process
+5. **Slovenian origin** - EU/GDPR native, understands local academic norms
+
+---
+
+## 25. Technical Dependencies & Bottlenecks
+
+### 25.1 Critical Dependencies
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        DEPENDENCY CHAIN                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  Level 0 (Foundation)                                                        │
+│  ├── Google Cloud Platform (All infrastructure)                             │
+│  ├── Python 3.11+ Runtime                                                   │
+│  └── Node.js 20+ (Frontend)                                                 │
+│                                                                              │
+│  Level 1 (Core Services)                                                     │
+│  ├── Vertex AI (Gemini) ← CRITICAL SINGLE POINT OF FAILURE                 │
+│  ├── Firebase Auth                                                          │
+│  ├── Firestore                                                              │
+│  └── Cloud Run                                                              │
+│                                                                              │
+│  Level 2 (Support Services)                                                  │
+│  ├── ChromaDB (self-hosted on Cloud Run)                                    │
+│  ├── Memorystore Redis                                                      │
+│  ├── Cloud Storage                                                          │
+│  └── Cloud Build CI/CD                                                      │
+│                                                                              │
+│  Level 3 (Libraries - High Risk if Breaking Changes)                        │
+│  ├── LangChain (RAG orchestration)                                          │
+│  ├── FastAPI (API framework)                                                │
+│  ├── PyMuPDF/pdfplumber (PDF parsing)                                       │
+│  ├── Plotly (Visualizations)                                                │
+│  ├── Next.js 14 (Frontend)                                                  │
+│  └── shadcn/ui (UI components)                                              │
+│                                                                              │
+│  Level 4 (External APIs)                                                     │
+│  ├── CrossRef API (DOI resolution)                                          │
+│  ├── PubMed API (PMID resolution)                                           │
+│  └── Zotero API (optional integration)                                      │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 25.2 Performance Bottlenecks
+
+| Bottleneck | Location | Current Limit | Mitigation |
+|------------|----------|---------------|------------|
+| **LLM Latency** | Article generation | ~2-5s per chunk | Parallelize sections, streaming |
+| **PDF Processing** | Document ingestion | ~10s per PDF | Background queue, batch processing |
+| **Vector Search** | RAG queries | ~500ms cold start | Redis cache for hot queries |
+| **Token Limits** | Long articles | 128k context | Chunking strategy, summarization |
+| **Cloud Run Cold Start** | First request | ~3-5s | Min instances = 1, warmup endpoint |
+| **Firestore Reads** | Dashboard stats | 1M reads/day limit | Aggregation caching, Redis |
+
+### 25.3 Scalability Concerns
+
+```python
+# Scalability Analysis
+scalability_assessment = {
+    "users": {
+        "current_limit": 100,
+        "bottleneck": "Vertex AI rate limits (60 RPM)",
+        "solution": "Request quota increase, implement queue"
+    },
+    "documents_per_project": {
+        "current_limit": 500,
+        "bottleneck": "ChromaDB memory usage",
+        "solution": "Migrate to Vertex AI Matching Engine"
+    },
+    "concurrent_generations": {
+        "current_limit": 10,
+        "bottleneck": "Cloud Run instances + LLM API",
+        "solution": "Pub/Sub queue, priority tiers"
+    },
+    "storage_per_user": {
+        "current_limit": "10GB",
+        "bottleneck": "Cost",
+        "solution": "Enforce quotas, archive old projects"
+    }
+}
+```
+
+---
+
+## 26. MVP Definition
+
+### 26.1 MVP Scope (Weeks 1-10)
+
+**IN SCOPE (Must Have):**
+- [ ] User registration/login (Firebase Auth)
+- [ ] Create project with research plan
+- [ ] Chatbot for research plan creation
+- [ ] Upload PDF abstracts for screening
+- [ ] AI-assisted abstract screening (Include/Exclude/Uncertain)
+- [ ] HITL review for uncertain abstracts
+- [ ] Upload full-text PDFs
+- [ ] Generate article draft (single generation)
+- [ ] Export to PDF
+- [ ] Basic visualization (PRISMA diagram)
+
+**OUT OF SCOPE (v2.0):**
+- Multi-user collaboration
+- Advanced visualizations (Evidence Gap Map, etc.)
+- Zotero/Mendeley integration
+- DOI/PMID auto-resolution
+- Document versioning
+- Mobile app
+- White-label options
+- LaTeX export
+- Custom citation styles
+
+### 26.2 MVP Success Criteria
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| Time to first draft | < 2 hours (vs 2+ weeks manual) | User tracking |
+| User retention (7-day) | > 40% | Analytics |
+| Task completion rate | > 70% complete a draft | Funnel analysis |
+| User satisfaction (NPS) | > 30 | Survey |
+| Bugs (critical) | 0 in production | Error tracking |
+
+### 26.3 MVP Architecture (Simplified)
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              MVP ARCHITECTURE (Minimal)                  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  Frontend: Next.js (Vercel hosting) ← Simpler!         │
+│       │                                                 │
+│       ▼                                                 │
+│  Backend: FastAPI on Cloud Run (single service)        │
+│       │                                                 │
+│  ┌────┼────┬─────────────┬─────────────┐               │
+│  ▼    ▼    ▼             ▼             ▼               │
+│ Auth  Firestore   Cloud Storage   Vertex AI           │
+│                                                         │
+│  NO: Redis, Pub/Sub, ChromaDB cluster                  │
+│  USE: In-memory caching, synchronous processing        │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 27. Success Metrics & KPIs
+
+### 27.1 Business KPIs
+
+| KPI | Definition | Target (Year 1) |
+|-----|------------|-----------------|
+| **MAU** | Monthly Active Users | 500 |
+| **MRR** | Monthly Recurring Revenue | $5,000 |
+| **CAC** | Customer Acquisition Cost | < $50 |
+| **LTV** | Lifetime Value | > $200 |
+| **Churn** | Monthly churn rate | < 5% |
+| **NPS** | Net Promoter Score | > 40 |
+
+### 27.2 Product KPIs
+
+| KPI | Definition | Target |
+|-----|------------|--------|
+| **Time to First Value** | Time from signup to first draft | < 30 min |
+| **Project Completion Rate** | % of projects with exported PDF | > 60% |
+| **HITL Response Time** | Avg time for user to respond to HITL | < 24h |
+| **Generation Quality** | User-rated quality 1-5 | > 4.0 |
+| **Support Tickets** | Per 100 users per month | < 10 |
+
+### 27.3 Technical KPIs
+
+| KPI | Definition | Target |
+|-----|------------|--------|
+| **Uptime** | Service availability | > 99.5% |
+| **P99 Latency** | 99th percentile response time | < 3s |
+| **Error Rate** | % of requests failing | < 0.5% |
+| **Deployment Frequency** | Releases per week | > 2 |
+| **Mean Time to Recovery** | Incident recovery time | < 1h |
+
+---
+
+## 28. Team Requirements
+
+### 28.1 Core Team (MVP Phase)
+
+| Role | Responsibilities | FTE | Cost/Month |
+|------|------------------|-----|------------|
+| **Full-stack Developer** | Backend, Frontend, DevOps | 1.0 | €4,000-6,000 |
+| **ML/AI Engineer** | Agent development, RAG optimization | 0.5 | €2,500-4,000 |
+| **Product Owner** | Requirements, testing, user feedback | 0.5 | €2,000-3,000 |
+| **Total MVP Team** | | **2.0 FTE** | **€8,500-13,000** |
+
+### 28.2 Growth Team (Post-MVP)
+
+| Role | Responsibilities | FTE |
+|------|------------------|-----|
+| **Frontend Developer** | UI/UX improvements, mobile | 1.0 |
+| **Backend Developer** | Scalability, integrations | 1.0 |
+| **DevOps/SRE** | Infrastructure, monitoring | 0.5 |
+| **Data Scientist** | Model fine-tuning, analytics | 0.5 |
+| **Customer Success** | Onboarding, support | 0.5 |
+| **Marketing** | Content, outreach | 0.5 |
+| **Total Growth Team** | | **4.0 FTE** |
+
+### 28.3 Skills Matrix
+
+```
+┌────────────────────┬────────────────────────────────────────────────────────┐
+│ Skill              │ Required │ Nice to Have │ Current │ Gap               │
+├────────────────────┼──────────┼──────────────┼─────────┼───────────────────┤
+│ Python/FastAPI     │    ●     │              │    ●    │ None              │
+│ Next.js/React      │    ●     │              │    ○    │ Need to learn     │
+│ GCP Architecture   │    ●     │              │    ◐    │ Some experience   │
+│ LLM/Prompt Eng.    │    ●     │              │    ●    │ None              │
+│ RAG Systems        │    ●     │              │    ●    │ None              │
+│ Terraform          │          │      ●       │    ○    │ Learning needed   │
+│ Academic Writing   │    ●     │              │    ●    │ None              │
+│ UI/UX Design       │          │      ●       │    ○    │ Need designer     │
+└────────────────────┴──────────┴──────────────┴─────────┴───────────────────┘
+
+Legend: ● = Strong  ◐ = Moderate  ○ = Weak/None
+```
+
+---
+
+## 29. Legal & IP Considerations
+
+### 29.1 Intellectual Property
+
+| Asset | IP Type | Status | Action Needed |
+|-------|---------|--------|---------------|
+| ResearchFlow name | Trademark | Unchecked | EUIPO trademark search |
+| Source code | Copyright | Owned | License decision (proprietary vs open core) |
+| Agent architecture | Trade secret | Protected | NDAs for contributors |
+| Prompts/templates | Copyright | Owned | Document ownership |
+| User content | User-owned | Clear | Terms of Service clause |
+| Generated articles | User-owned | Clear | ToS states user owns output |
+
+### 29.2 Terms of Service - Key Clauses
+
+```markdown
+## Critical ToS Provisions
+
+1. **User Content Ownership**
+   - Users retain full ownership of uploaded documents
+   - Users own all AI-generated content
+   - Platform has license to process for service delivery only
+
+2. **AI Disclosure**
+   - Clearly disclose AI involvement in article generation
+   - User responsible for final review and accuracy
+   - No guarantee of factual accuracy
+
+3. **Academic Integrity**
+   - User responsible for compliance with institutional policies
+   - Tool assists, does not replace scholarly judgment
+   - Plagiarism checking is user's responsibility
+
+4. **Liability Limitations**
+   - No liability for hallucinations or incorrect citations
+   - User must verify all claims before publication
+   - Service provided "as is"
+
+5. **Data Processing**
+   - Documents processed only for service delivery
+   - No training on user data without consent
+   - EU data residency guaranteed
+```
+
+### 29.3 Copyright Considerations
+
+| Concern | Risk Level | Mitigation |
+|---------|------------|------------|
+| PDF redistribution | HIGH | Users upload their own legally obtained PDFs |
+| Copyrighted text in RAG | MEDIUM | Fair use for research, no redistribution |
+| AI-generated plagiarism | LOW | Not trained on user docs, citation required |
+| Publisher paywalls | LOW | User obtains full-text through legitimate channels |
+
+---
+
+## 30. Go-to-Market Strategy
+
+### 30.1 Target Segments (Priority Order)
+
+| Segment | Description | Size | Approach |
+|---------|-------------|------|----------|
+| **PhD Students** | Writing lit reviews, scoping reviews | Large | Freemium + academic pricing |
+| **Research Groups** | Small teams at universities | Medium | Team plan, department demo |
+| **Institutions** | University libraries, research offices | Small | White-label, annual contracts |
+| **Consultancies** | Policy research, think tanks | Small | Enterprise tier |
+
+### 30.2 Launch Strategy
+
+```
+MONTH 1-2: Private Beta
+├── 10-20 hand-picked researchers
+├── Personal onboarding sessions
+├── Intensive feedback collection
+└── Bug fixes and iterations
+
+MONTH 3: Public Beta
+├── Open signup with waitlist
+├── Academic conference presentations
+├── Social media launch (Twitter/X, LinkedIn)
+└── Research community outreach
+
+MONTH 4-6: General Availability
+├── Full pricing tiers active
+├── Partner with 2-3 universities
+├── Start content marketing (blog, tutorials)
+└── Seek academic publication validation
+```
+
+### 30.3 Marketing Channels
+
+| Channel | Cost | Expected Impact | Priority |
+|---------|------|-----------------|----------|
+| Academic Twitter/X | Low | High (viral potential) | HIGH |
+| LinkedIn (researchers) | Low | Medium | MEDIUM |
+| Conference booths | Medium | High (targeted) | HIGH |
+| SEO/Content marketing | Low | Medium (long-term) | MEDIUM |
+| YouTube tutorials | Low | High (demonstrations) | HIGH |
+| Email to research offices | Low | Low-Medium | LOW |
+| Paid ads (Google) | High | Low (niche audience) | LOW |
+
+---
+
+## 31. Vendor Lock-in Analysis
+
+### 31.1 Lock-in Risk Assessment
+
+| Component | Vendor | Lock-in Risk | Mitigation |
+|-----------|--------|--------------|------------|
+| LLM API | Vertex AI (Gemini) | 🔴 HIGH | Abstract LLM layer, support multiple providers |
+| Auth | Firebase Auth | 🟡 MEDIUM | Standard OAuth, exportable user data |
+| Database | Firestore | 🟡 MEDIUM | Document DB pattern portable to MongoDB |
+| Storage | Cloud Storage | 🟢 LOW | S3-compatible API, easy migration |
+| Hosting | Cloud Run | 🟢 LOW | Docker containers, any cloud |
+| Redis | Memorystore | 🟢 LOW | Standard Redis, any provider |
+| Vector DB | ChromaDB | 🟢 LOW | Open source, self-hosted possible |
+| CI/CD | Cloud Build | 🟢 LOW | Standard build process, GitHub Actions alternative |
+
+### 31.2 Multi-Cloud Escape Plan
+
+```python
+# LLM Abstraction Layer
+class LLMProvider(ABC):
+    @abstractmethod
+    async def generate(self, prompt: str, model: str) -> str:
+        pass
+
+class VertexAIProvider(LLMProvider):
+    async def generate(self, prompt: str, model: str) -> str:
+        # Vertex AI implementation
+        pass
+
+class AnthropicProvider(LLMProvider):
+    async def generate(self, prompt: str, model: str) -> str:
+        # Claude implementation (fallback)
+        pass
+
+class OpenAIProvider(LLMProvider):
+    async def generate(self, prompt: str, model: str) -> str:
+        # GPT-4 implementation (fallback)
+        pass
+
+# Factory with automatic failover
+class LLMFactory:
+    providers = [VertexAIProvider(), AnthropicProvider(), OpenAIProvider()]
+    
+    async def generate(self, prompt: str) -> str:
+        for provider in self.providers:
+            try:
+                return await provider.generate(prompt)
+            except Exception:
+                continue
+        raise AllProvidersFailedError()
+```
+
+---
+
+## 32. Known Limitations & Future Improvements
+
+### 32.1 Current Limitations
+
+| Limitation | Impact | Planned Fix | Version |
+|------------|--------|-------------|---------|
+| English only | Excludes non-English researchers | Multi-language support | v2.5 |
+| No real-time collaboration | Multiple researchers can't edit simultaneously | WebSocket-based co-editing | v2.0 |
+| Single LLM provider | Vendor lock-in, outage risk | Multi-LLM support | v2.0 |
+| No mobile app | Poor mobile experience | React Native app | v3.0 |
+| Limited journal templates | Manual formatting needed | Journal template library | v2.5 |
+| No automated database search | User must search WoS/Scopus manually | API integration with databases | v3.0 |
+| ChromaDB scaling | Max ~100k vectors per project | Vertex AI Matching Engine | v2.5 |
+| No plagiarism check | User must use external tool | Turnitin/iThenticate integration | v2.5 |
+
+### 32.2 Technical Debt Backlog
+
+| Item | Description | Priority | Effort |
+|------|-------------|----------|--------|
+| Test coverage | Current ~40%, target 80% | HIGH | 2 weeks |
+| API documentation | OpenAPI spec incomplete | MEDIUM | 1 week |
+| Error handling | Inconsistent error codes | MEDIUM | 1 week |
+| Logging | Missing structured logging | HIGH | 3 days |
+| Config management | Hardcoded values | MEDIUM | 3 days |
+| Database indexes | Unoptimized Firestore queries | LOW | 2 days |
+
+### 32.3 Feature Roadmap
+
+```
+v2.0 (Q3 2026)
+├── Multi-user collaboration
+├── Document versioning
+├── Multi-LLM fallback
+└── Advanced visualizations
+
+v2.5 (Q4 2026)
+├── Multi-language support
+├── Plagiarism check integration
+├── Journal template library
+└── Vertex AI Matching Engine migration
+
+v3.0 (Q1 2027)
+├── Mobile app (React Native)
+├── Automated database search
+├── Real-time co-editing
+└── White-label customization
+
+v4.0 (Q3 2027)
+├── Meta-analysis support
+├── Protocol builder
+├── Institutional dashboard
+└── API for third-party tools
+```
+
+---
+
+## 33. Final Checklist Before Implementation
+
+### 33.1 Pre-Development Checklist
+
+```markdown
+## Business
+- [ ] ResearchFlow trademark search completed
+- [ ] Business entity registered
+- [ ] Bank account opened
+- [ ] Privacy policy drafted
+- [ ] Terms of Service drafted
+- [ ] Pricing tiers finalized
+
+## Technical
+- [ ] GCP project created
+- [ ] Firebase project linked
+- [ ] Vertex AI API enabled
+- [ ] Domain purchased
+- [ ] SSL certificates configured
+- [ ] CI/CD pipeline tested
+
+## Team
+- [ ] Core team assembled
+- [ ] Development environment standardized
+- [ ] Git workflow agreed
+- [ ] Communication tools set up (Slack/Discord)
+- [ ] Documentation standards defined
+
+## Security
+- [ ] Penetration test scheduled (pre-launch)
+- [ ] GDPR DPA signed with GCP
+- [ ] Security policy documented
+- [ ] Incident response plan drafted
+
+## Launch
+- [ ] Beta testers identified (10-20 people)
+- [ ] Feedback collection mechanism ready
+- [ ] Support/help documentation started
+- [ ] Analytics tracking configured
+```
+
+### 33.2 Go/No-Go Decision Criteria
+
+| Criterion | Requirement | Met? |
+|-----------|-------------|------|
+| MVP features complete | All items in 26.1 | [ ] |
+| Critical bugs | Zero critical bugs | [ ] |
+| Security audit | No high-severity findings | [ ] |
+| Performance | P99 < 3s for all endpoints | [ ] |
+| Documentation | User guide complete | [ ] |
+| Legal | ToS and Privacy Policy published | [ ] |
+| Team readiness | Support process defined | [ ] |
+
+---
+
 **Dokument pripravil:** Claude (AI Assistant)  
 **Za potrditev:** [Ime raziskovalca]  
 **Datum:** April 2026
+**Verzija:** 2.1
