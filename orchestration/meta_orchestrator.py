@@ -4,6 +4,7 @@ import asyncio
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Any, Callable, Optional
 
 import structlog
@@ -51,6 +52,7 @@ class OrchestratorConfig:
     saturation_config: SaturationConfig = field(default_factory=SaturationConfig)
     quality_thresholds: QualityThresholds = field(default_factory=QualityThresholds)
     quality_gates: QualityGates = field(default_factory=QualityGates)
+    gap_detection_threshold: int = 50  # Minimum score to trigger gap detection
     
     # Recovery
     max_retries_per_agent: int = 3
@@ -346,58 +348,323 @@ class MetaOrchestrator:
         state = self.state_manager.state
         state.current_phase = ArticlePhase.WRITING
         
-        # Process sections in order
+        # IMPROVEMENT: Process independent sections in parallel
         ordered_sections = self._sections_config.get_ordered_sections()
         
+        # Group sections by dependency
+        # Parallel group 1: abstract, methods, results (independent)
+        # Sequential: introduction -> discussion -> conclusion
+        
+        parallel_group = []
+        sequential_group = []
+        
         for section_spec in ordered_sections:
-            section_id = section_spec.id
-            self._current_section = section_id
-            
-            self.log.info("section_started", section=section_id)
-            
-            # Import saturation loop
-            from .saturation_loop import SaturationLoop
-            
-            saturation_loop = SaturationLoop(
-                config=self.config.saturation_config,
-                section_spec=section_spec,
-                agents=self._agents,
-                quality_gates=self.config.quality_gates
-            )
-            
-            # Initialize section state
-            section_state = state.sections.get(section_id)
-            if section_state:
-                section_state.status = SectionStatus.IN_PROGRESS
-            
-            # Run saturation loop
-            result = await saturation_loop.run(section_state)
-            
-            # Update state
-            if result.success:
-                section_state.status = SectionStatus.APPROVED
-                section_state.content = result.final_content
-                section_state.current_score = result.final_score
+            if section_spec.id in ["abstract", "methods", "results"]:
+                parallel_group.append(section_spec)
             else:
-                section_state.status = SectionStatus.REVISION_NEEDED
-                
-                # Check if human review needed
-                if result.needs_human_review:
-                    state.request_human_review(
-                        reason=result.human_review_reason,
-                        context={"section": section_id}
-                    )
-            
-            # Checkpoint after each section
-            if self._sections_completed % self.config.checkpoint_frequency == 0:
-                self.state_manager.create_checkpoint(f"section_{section_id}")
-            
-            self._sections_completed += 1
-            self.log.info(
-                "section_completed",
-                section=section_id,
-                score=section_state.current_score if section_state else 0
+                sequential_group.append(section_spec)
+        
+        # Process parallel group concurrently
+        if parallel_group and self.config.mode == ExecutionMode.PARALLEL:
+            self.log.info("parallel_sections_started", count=len(parallel_group))
+            tasks = [
+                self._process_section(spec)
+                for spec in parallel_group
+            ]
+            await asyncio.gather(*tasks, return_exceptions=True)
+        else:
+            # Fallback to sequential if not in parallel mode
+            for section_spec in parallel_group:
+                await self._process_section(section_spec)
+        
+        # Process sequential sections one by one
+        for section_spec in sequential_group:
+            await self._process_section(section_spec)
+        
+        # Check for knowledge gaps after writing all sections
+        await self._check_for_gaps_and_pause()
+    
+    async def _check_for_gaps_and_pause(self) -> None:
+        """
+        Check for knowledge gaps in low-scoring sections.
+        If gaps detected, pause for literature addition.
+        """
+        state = self.state_manager.state
+        
+        # Find low-scoring sections
+        min_score_threshold = self.config.gap_detection_threshold
+        low_scoring = []
+        
+        for section_id, section_state in state.sections.items():
+            if 0 < section_state.current_score < min_score_threshold:
+                low_scoring.append({
+                    'section_id': section_id,
+                    'score': section_state.current_score,
+                    'content': section_state.content,
+                    'quality_feedback': section_state.quality_feedback
+                })
+        
+        if not low_scoring:
+            self.log.info("no_gaps_detected", message="All sections above threshold")
+            return
+        
+        self.log.warning("low_scoring_sections_detected", count=len(low_scoring))
+        
+        # Analyze gaps using gap_identifier agent
+        gap_identifier = self._agents.get("gap_identifier")
+        if not gap_identifier:
+            self.log.error("gap_identifier_not_available")
+            return
+        
+        all_missing_concepts = []
+        
+        for section_info in low_scoring:
+            result = await gap_identifier.execute(
+                action="analyze_section_gaps",
+                section_id=section_info['section_id'],
+                content=section_info['content'],
+                score=section_info['score'],
+                quality_feedback=section_info['quality_feedback']
             )
+            
+            if result.success and result.output:
+                gap_data = result.output
+                all_missing_concepts.extend(gap_data.get("missing_theories", []))
+                all_missing_concepts.extend(gap_data.get("missing_methodologies", []))
+                all_missing_concepts.extend(gap_data.get("missing_empirical_evidence", []))
+                
+                self.log.info(
+                    "section_gaps_analyzed",
+                    section=section_info['section_id'],
+                    theories=len(gap_data.get("missing_theories", [])),
+                    methodologies=len(gap_data.get("missing_methodologies", [])),
+                    evidence=len(gap_data.get("missing_empirical_evidence", []))
+                )
+        
+        if not all_missing_concepts:
+            self.log.info("no_specific_gaps_identified")
+            return
+        
+        # Generate WOS queries using literature_scout
+        literature_scout = self._agents.get("literature_scout")
+        if not literature_scout:
+            self.log.error("literature_scout_not_available")
+            return
+        
+        wos_result = await literature_scout.execute(
+            action="generate_wos_query",
+            missing_concepts=all_missing_concepts,
+            context=state.title
+        )
+        
+        if not wos_result.success or not wos_result.output:
+            self.log.error("wos_query_generation_failed")
+            return
+        
+        wos_queries = wos_result.output
+        
+        # Generate gap report
+        report_path = self._generate_gap_report(low_scoring, all_missing_concepts, wos_queries)
+        
+        # Pause orchestrator
+        state.orchestrator_state = OrchestratorState.PAUSED
+        self.state_manager.save_state()
+        
+        self.log.warning("orchestrator_paused_for_literature_addition",
+                        sections_affected=len(low_scoring),
+                        gaps_total=len(all_missing_concepts))
+        
+        # Print instructions to console
+        print("\n" + "="*70)
+        print("   ⏸️  ORCHESTRATOR PAUSED - ACTION REQUIRED")
+        print("="*70)
+        print(f"\n🔍 Knowledge gaps detected in {len(low_scoring)} sections:")
+        for s in low_scoring:
+            print(f"   - {s['section_id'].upper()}: score {s['score']}/100")
+        print(f"\n📚 Total missing concepts: {len(all_missing_concepts)}")
+        print(f"\n📝 Gap report saved to: {report_path}")
+        print("\n✅ NEXT STEPS:")
+        print("   1. Review gap report for WOS search queries")
+        print("   2. Execute searches in Web of Science")
+        print("   3. Download results as .ris or .bib files")
+        print("   4. Place files in: data/raw_literature/additional/")
+        print("   5. Run ingestion: python scripts/ingest_additional_literature.py")
+        print("   6. Resume generation: orchestrator.resume_after_literature_addition()")
+        print("\n" + "="*70 + "\n")
+    
+    def _generate_gap_report(
+        self,
+        low_scoring: list[dict],
+        missing_concepts: list[dict],
+        wos_queries: dict
+    ) -> Path:
+        """
+        Generate markdown report with gap analysis and WOS queries.
+        
+        Returns:
+            Path to the generated report file
+        """
+        state = self.state_manager.state
+        
+        # Create reports directory
+        reports_dir = Path("data/reports")
+        reports_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Add timestamp to prevent overwriting previous reports
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_path = reports_dir / f"gap_report_{state.article_id}_{timestamp}.md"
+        
+        report_lines = [
+            "# Knowledge Gap Analysis Report",
+            f"\n**Article:** {state.title}",
+            f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            f"**Article ID:** {state.article_id}",
+            "\n---\n",
+            "## Summary",
+            f"\n- **Low-scoring sections:** {len(low_scoring)}",
+            f"- **Total gaps identified:** {len(missing_concepts)}",
+            f"- **WOS queries generated:** {len(wos_queries.get('queries', []))}",
+            "\n## Low-Scoring Sections\n"
+        ]
+        
+        for section_info in low_scoring:
+            report_lines.append(f"### {section_info['section_id'].upper()}")
+            report_lines.append(f"**Score:** {section_info['score']}/100\n")
+        
+        report_lines.append("\n## Missing Concepts\n")
+        
+        for i, concept in enumerate(missing_concepts, 1):
+            concept_name = (concept.get('theory_name') or 
+                          concept.get('methodology_name') or 
+                          concept.get('research_area', 'Unknown'))
+            report_lines.append(f"### {i}. {concept_name}")
+            report_lines.append(f"**Why needed:** {concept.get('why_needed', 'N/A')}")
+            report_lines.append(f"**Search terms:** {', '.join(concept.get('search_terms', []))}")
+            report_lines.append(f"**Expected impact:** {concept.get('expected_impact', 'N/A')}\n")
+        
+        report_lines.append("\n## Web of Science Queries\n")
+        
+        for i, query_info in enumerate(wos_queries.get('queries', []), 1):
+            report_lines.append(f"### Query {i}")
+            report_lines.append(f"```\n{query_info.get('query', 'N/A')}\n```")
+            report_lines.append(f"**Purpose:** {query_info.get('purpose', 'N/A')}")
+            report_lines.append(f"**Expected results:** {query_info.get('expected_results', 'N/A')}\n")
+        
+        strategy = wos_queries.get('search_strategy', {})
+        if strategy:
+            report_lines.append("\n## Search Strategy\n")
+            report_lines.append(f"**Approach:** {strategy.get('approach', 'N/A')}")
+            report_lines.append(f"**Rationale:** {strategy.get('rationale', 'N/A')}")
+            report_lines.append(f"**Time span:** {strategy.get('time_span', 'N/A')}")
+            report_lines.append(f"**Estimated results:** {strategy.get('estimated_total_results', 'N/A')}")
+        
+        report_lines.append("\n## Instructions\n")
+        for instruction in wos_queries.get('instructions', []):
+            report_lines.append(f"- {instruction}")
+        
+        # Write report
+        report_path.write_text('\n'.join(report_lines), encoding='utf-8')
+        
+        self.log.info("gap_report_generated", path=str(report_path))
+        
+        return report_path
+    
+    async def resume_after_literature_addition(self) -> None:
+        """
+        Resume article generation after new literature has been ingested.
+        Regenerates low-scoring sections only.
+        """
+        state = self.state_manager.state
+        
+        if state.orchestrator_state != OrchestratorState.PAUSED:
+            self.log.warning("resume_called_but_not_paused", state=state.orchestrator_state.value)
+            return
+        
+        self.log.info("resuming_after_literature_addition")
+        
+        # Resume orchestrator
+        state.orchestrator_state = OrchestratorState.RUNNING
+        
+        # Find sections that need regeneration
+        min_score_threshold = self.config.gap_detection_threshold
+        sections_to_regenerate = []
+        
+        for section_id, section_state in state.sections.items():
+            if 0 < section_state.current_score < min_score_threshold:
+                sections_to_regenerate.append(section_id)
+        
+        if not sections_to_regenerate:
+            self.log.info("no_sections_to_regenerate")
+            state.orchestrator_state = OrchestratorState.COMPLETED
+            return
+        
+        self.log.info("regenerating_sections", count=len(sections_to_regenerate))
+        
+        # Regenerate each section
+        for section_id in sections_to_regenerate:
+            section_spec = self._sections_config.get_section_spec(section_id)
+            if section_spec:
+                self.log.info("regenerating_section", section=section_id)
+                await self._process_section(section_spec)
+        
+        # Continue with remaining workflow
+        await self._run_qa_phase()
+        await self._run_finalization_phase()
+        
+        state.orchestrator_state = OrchestratorState.COMPLETED
+        self.log.info("article_generation_completed_after_resume")
+    
+    async def _process_section(self, section_spec) -> None:
+        """Process a single section through saturation loop."""
+        state = self.state_manager.state
+        section_id = section_spec.id
+        self._current_section = section_id
+        
+        self.log.info("section_started", section=section_id)
+        
+        # Import saturation loop
+        from .saturation_loop import SaturationLoop
+        
+        saturation_loop = SaturationLoop(
+            config=self.config.saturation_config,
+            section_spec=section_spec,
+            agents=self._agents,
+            quality_gates=self.config.quality_gates
+        )
+        
+        # Initialize section state
+        section_state = state.sections.get(section_id)
+        if section_state:
+            section_state.status = SectionStatus.IN_PROGRESS
+        
+        # Run saturation loop
+        result = await saturation_loop.run(section_state)
+        
+        # Update state
+        if result.success:
+            section_state.status = SectionStatus.APPROVED
+            section_state.content = result.final_content
+            section_state.current_score = result.final_score
+        else:
+            section_state.status = SectionStatus.REVISION_NEEDED
+            
+            # Check if human review needed
+            if result.needs_human_review:
+                state.request_human_review(
+                    reason=result.human_review_reason,
+                    context={"section": section_id}
+                )
+        
+        # Checkpoint after each section
+        if self._sections_completed % self.config.checkpoint_frequency == 0:
+            self.state_manager.create_checkpoint(f"section_{section_id}")
+        
+        self._sections_completed += 1
+        self.log.info(
+            "section_completed",
+            section=section_id,
+            score=section_state.current_score if section_state else 0
+        )
         
         self.log.info("phase_completed", phase="writing")
     

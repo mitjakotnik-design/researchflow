@@ -4,6 +4,7 @@ import json
 from typing import Any, Optional
 
 import structlog
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 from agents.base_agent import BaseAgent, AgentRole, AgentResult
 from agents.llm_client import LLMClientFactory
@@ -50,6 +51,8 @@ class GapIdentifierAgent(BaseAgent):
             return await self._suggest_research_directions(**kwargs)
         elif action == "prioritize":
             return await self._prioritize_gaps(**kwargs)
+        elif action == "analyze_section_gaps":
+            return await self._analyze_section_gaps(**kwargs)
         else:
             raise ValueError(f"Unknown action: {action}")
     
@@ -240,6 +243,131 @@ Suggest 5-8 research directions."""
         prioritized.sort(key=lambda x: x.get("priority_score", 0), reverse=True)
         
         return prioritized[:10]  # Return top 10
+    
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        retry=retry_if_exception_type((TimeoutError, ConnectionError)),
+        reraise=True
+    )
+    async def _analyze_section_gaps(
+        self,
+        section_id: str,
+        content: str,
+        score: float,
+        quality_feedback: Optional[dict] = None,
+        **kwargs
+    ) -> dict:
+        """
+        Analyze specific section for missing theoretical concepts or methodologies.
+        
+        This is targeted gap analysis for low-scoring article sections,
+        focusing on identifying what specific literature should be added.
+        
+        Includes automatic retry logic (3 attempts) for LLM timeouts/connection errors.
+        """
+        
+        # Build context from feedback
+        feedback_text = ""
+        if quality_feedback:
+            weaknesses = quality_feedback.get("weaknesses", [])
+            missing_elements = quality_feedback.get("missing_elements", [])
+            
+            if weaknesses:
+                feedback_text += "\n## Identified Weaknesses:\n"
+                feedback_text += "\n".join(f"- {w}" for w in weaknesses)
+            
+            if missing_elements:
+                feedback_text += "\n## Missing Elements:\n"
+                feedback_text += "\n".join(f"- {m}" for m in missing_elements)
+        
+        system_prompt = """You are a research literature gap specialist.
+Analyze low-scoring article sections to identify SPECIFIC missing theoretical frameworks,
+methodologies, or empirical evidence that should be added from literature.
+
+Focus on:
+- Missing theoretical frameworks (e.g., "Job Demands-Resources model")
+- Missing methodologies (e.g., "PRISMA-ScR guidelines")
+- Missing empirical evidence or seminal papers
+- Key concepts that are not adequately supported by citations
+
+Output should be ACTIONABLE - name specific theories, models, or research areas."""
+        
+        prompt = f"""Analyze this {section_id.upper()} section with score {score}/100:
+
+## Section Content Preview (first 1000 chars):
+{content[:1000]}
+
+{feedback_text}
+
+## Task
+Identify SPECIFIC missing theoretical concepts, frameworks, methodologies, or research areas
+that need to be added from literature to improve this section.
+
+## Output JSON
+{{
+    "section_id": "{section_id}",
+    "current_score": {score},
+    "missing_theories": [
+        {{
+            "theory_name": "e.g., Job Demands-Resources Model",
+            "why_needed": "why this theory is essential for this section",
+            "search_terms": ["alternative names for this theory"],
+            "expected_impact": "how adding this will improve the section"
+        }}
+    ],
+    "missing_methodologies": [
+        {{
+            "methodology_name": "e.g., PRISMA-ScR guidelines",
+            "why_needed": "why needed",
+            "search_terms": ["related terms"],
+            "expected_impact": "improvement expected"
+        }}
+    ],
+    "missing_empirical_evidence": [
+        {{
+            "research_area": "e.g., longitudinal studies on AI adoption",
+            "why_needed": "gap description",
+            "search_terms": ["search terms"],
+            "expected_impact": "expected improvement"
+        }}
+    ],
+    "priority": "high|medium|low",
+    "estimated_improvement": <score increase expected, e.g., 25>,
+    "rationale": "overall assessment of why score is low"
+}}"""
+        
+        response = await self._llm_client.generate(
+            prompt=prompt,
+            system_prompt=system_prompt,
+            max_tokens=1500,
+            json_mode=True
+        )
+        
+        try:
+            gaps = json.loads(response.content)
+            
+            self.log.info(
+                "section_gaps_analyzed",
+                section=section_id,
+                score=score,
+                missing_theories=len(gaps.get("missing_theories", [])),
+                missing_methodologies=len(gaps.get("missing_methodologies", [])),
+                missing_evidence=len(gaps.get("missing_empirical_evidence", []))
+            )
+            
+            return gaps
+            
+        except json.JSONDecodeError as e:
+            self.log.error("section_gap_analysis_failed", section=section_id, error=str(e))
+            return {
+                "section_id": section_id,
+                "current_score": score,
+                "missing_theories": [],
+                "missing_methodologies": [],
+                "missing_empirical_evidence": [],
+                "error": "Parse failed"
+            }
     
     def _enrich_result(self, result: AgentResult) -> AgentResult:
         """Add gap identifier metadata."""

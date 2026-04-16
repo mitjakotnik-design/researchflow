@@ -1,0 +1,191 @@
+# ResearchFlow Agent Skills Configuration
+# Version: 2.0.0
+
+# =============================================================================
+# Model Configuration
+# =============================================================================
+models:
+  default: gemini-2.5-pro
+  fallback: gemini-2.5-flash
+  
+  agents:
+    # Research cluster
+    researcher:
+      model: gemini-2.5-pro
+      temperature: 0.3
+      max_tokens: 8192
+    literature_scout:
+      model: gemini-2.5-flash
+      temperature: 0.2
+      max_tokens: 4096
+    data_extractor:
+      model: gemini-2.5-pro
+      temperature: 0.1
+      max_tokens: 8192
+    meta_analyst:
+      model: gemini-2.5-flash
+      temperature: 0.2
+      max_tokens: 4096
+    gap_identifier:
+      model: gemini-2.5-pro
+      temperature: 0.3
+      max_tokens: 8192
+    
+    # Writing cluster
+    writer:
+      model: gemini-2.5-pro
+      temperature: 0.4
+      max_tokens: 16384
+    synthesizer:
+      model: gemini-2.5-pro
+      temperature: 0.3
+      max_tokens: 8192
+    academic_editor:
+      model: gemini-2.5-flash
+      temperature: 0.2
+      max_tokens: 8192
+    terminology_guardian:
+      model: gemini-2.5-flash
+      temperature: 0.1
+      max_tokens: 4096
+    citation_manager:
+      model: gemini-2.5-flash
+      temperature: 0.1
+      max_tokens: 4096
+    visualizer:
+      model: gemini-2.5-flash
+      temperature: 0.2
+      max_tokens: 4096
+    
+    # Quality cluster
+    multi_evaluator:
+      model: gemini-2.5-pro
+      temperature: 0.2
+      max_tokens: 8192
+    fact_checker:
+      model: gemini-2.5-pro
+      temperature: 0.1
+      max_tokens: 8192
+    consistency_checker:
+      model: gemini-2.5-flash
+      temperature: 0.1
+      max_tokens: 4096
+    bias_auditor:
+      model: gemini-2.5-pro
+      temperature: 0.2
+      max_tokens: 8192
+    critic:
+      model: gemini-2.5-pro
+      temperature: 0.3
+      max_tokens: 8192
+    methodology_validator:
+      model: gemini-2.5-flash
+      temperature: 0.1
+      max_tokens: 4096
+
+# =============================================================================
+# Quality Thresholds
+# =============================================================================
+quality:
+  # Overall quality score thresholds
+  publish_ready: 85
+  needs_revision: 70
+  major_issues: 60
+  
+  # Dimension-specific thresholds
+  accuracy:
+    minimum: 90
+    target: 95
+  coherence:
+    minimum: 75
+    target: 85
+  completeness:
+    minimum: 90
+    target: 100
+  consistency:
+    minimum: 95
+    target: 100
+  citation_validity:
+    minimum: 90
+    target: 100
+  bias_free:
+    maximum_score: 25  # Lower is better
+
+# =============================================================================
+# Timeouts (seconds)
+# =============================================================================
+timeouts:
+  rag_query: 30
+  llm_call: 45
+  batch_extraction: 300
+  full_research: 600
+  quality_check: 120
+  parallel_timeout: 180
+
+# =============================================================================
+# Rate Limiting
+# =============================================================================
+rate_limits:
+  requests_per_minute: 60
+  tokens_per_minute: 1000000
+  burst_multiplier: 1.5
+  backoff_factor: 2.0
+
+# =============================================================================
+# Circuit Breaker
+# =============================================================================
+circuit_breaker:
+  failure_threshold: 5
+  timeout_seconds: 60
+  half_open_requests: 3
+
+# =============================================================================
+# PRISMA-ScR Configuration
+# =============================================================================
+prisma_scr:
+  required_items: [1, 2, 3, 4, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19]
+  recommended_items: [5, 11, 12, 20, 21, 22]
+  minimum_compliance: 0.90
+
+# =============================================================================
+# Domain Configuration: AI in HR
+# =============================================================================
+domain:
+  name: "AI Implementation in HR Functions"
+  
+  ai_types:
+    - resume_screening
+    - video_interviews
+    - chatbots
+    - monitoring
+    - analytics
+    - robotics
+    - decision_support
+  
+  hr_functions:
+    - recruitment
+    - onboarding
+    - performance
+    - learning
+    - compensation
+    - wellbeing
+    - offboarding
+  
+  psychosocial_risks:
+    - stress
+    - burnout
+    - autonomy
+    - surveillance
+    - fairness
+    - job_insecurity
+    - social_relationships
+    - work_life_balance
+    - meaning
+  
+  organizational_outcomes:
+    - trust
+    - culture
+    - resistance
+    - adoption
+    - efficiency
+    - engagement

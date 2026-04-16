@@ -12,7 +12,7 @@ import re
 # Paths
 output_dir = Path("output")
 figures_dir = output_dir / "figures_modern"
-article_path = output_dir / "article_scoping_review.md"
+article_path = output_dir / "article_best_of_breed.md"  # Using best-of-breed compilation
 
 # Figure configuration: where each figure goes and its details
 FIGURES = {

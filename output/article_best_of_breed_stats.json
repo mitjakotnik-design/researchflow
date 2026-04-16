@@ -1,0 +1,39 @@
+{
+  "title": "From Technostress to Organizational Resilience: A Scoping Review of Psychosocial Risks and Organizational Culture Implications of AI Implementation Through HR Functions",
+  "compiled_at": "2026-04-16T15:26:54.294016",
+  "method": "best-of-breed",
+  "total_sections": 6,
+  "average_score": 79.5,
+  "sections": {
+    "abstract": {
+      "source": "article_20260416_121158",
+      "score": 93,
+      "iterations": 5
+    },
+    "introduction": {
+      "source": "article_20260416_120143",
+      "score": 60,
+      "iterations": 2
+    },
+    "methods": {
+      "source": "article_20260416_120143",
+      "score": 72,
+      "iterations": 5
+    },
+    "results": {
+      "source": "article_20260416_131705",
+      "score": 87,
+      "iterations": 4
+    },
+    "discussion": {
+      "source": "article_20260416_120143",
+      "score": 83,
+      "iterations": 5
+    },
+    "conclusion": {
+      "source": "article_20260416_121954",
+      "score": 82,
+      "iterations": 5
+    }
+  }
+}

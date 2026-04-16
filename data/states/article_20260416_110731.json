@@ -1,0 +1,766 @@
+{
+  "article_id": "article_20260416_110731",
+  "title": "From Technostress to Organizational Resilience: A Scoping Review of Psychosocial Risks and Organizational Culture Implications of AI Implementation Through HR Functions",
+  "created_at": "2026-04-16T11:07:31.997666",
+  "last_modified": "2026-04-16T11:08:27.037423",
+  "current_phase": "completed",
+  "orchestrator_state": "completed",
+  "sections": {
+    "abstract": {
+      "section_id": "abstract",
+      "status": "revision_needed",
+      "current_iteration": 2,
+      "content": "",
+      "word_count": 0,
+      "current_score": 0,
+      "score_history": [
+        0,
+        0
+      ],
+      "quality_issues": [],
+      "gates_passed": true,
+      "gate_failures": [],
+      "citations_count": 0,
+      "last_modified": null,
+      "reviewer_comments": []
+    },
+    "introduction": {
+      "section_id": "introduction",
+      "status": "revision_needed",
+      "current_iteration": 2,
+      "content": "",
+      "word_count": 0,
+      "current_score": 0,
+      "score_history": [
+        0,
+        0
+      ],
+      "quality_issues": [],
+      "gates_passed": true,
+      "gate_failures": [],
+      "citations_count": 0,
+      "last_modified": null,
+      "reviewer_comments": []
+    },
+    "methods": {
+      "section_id": "methods",
+      "status": "revision_needed",
+      "current_iteration": 2,
+      "content": "",
+      "word_count": 0,
+      "current_score": 0,
+      "score_history": [
+        0,
+        0
+      ],
+      "quality_issues": [],
+      "gates_passed": true,
+      "gate_failures": [],
+      "citations_count": 0,
+      "last_modified": null,
+      "reviewer_comments": []
+    },
+    "results": {
+      "section_id": "results",
+      "status": "revision_needed",
+      "current_iteration": 2,
+      "content": "",
+      "word_count": 0,
+      "current_score": 0,
+      "score_history": [
+        0,
+        0
+      ],
+      "quality_issues": [],
+      "gates_passed": true,
+      "gate_failures": [],
+      "citations_count": 0,
+      "last_modified": null,
+      "reviewer_comments": []
+    },
+    "discussion": {
+      "section_id": "discussion",
+      "status": "revision_needed",
+      "current_iteration": 2,
+      "content": "",
+      "word_count": 0,
+      "current_score": 0,
+      "score_history": [
+        0,
+        0
+      ],
+      "quality_issues": [],
+      "gates_passed": true,
+      "gate_failures": [],
+      "citations_count": 0,
+      "last_modified": null,
+      "reviewer_comments": []
+    },
+    "conclusion": {
+      "section_id": "conclusion",
+      "status": "revision_needed",
+      "current_iteration": 2,
+      "content": "",
+      "word_count": 0,
+      "current_score": 0,
+      "score_history": [
+        0,
+        0
+      ],
+      "quality_issues": [],
+      "gates_passed": true,
+      "gate_failures": [],
+      "citations_count": 0,
+      "last_modified": null,
+      "reviewer_comments": []
+    }
+  },
+  "target_journal": "Journal of Occupational Health Psychology",
+  "target_word_count": 8000,
+  "language": "en",
+  "research_cache": {
+    "queries_executed": {},
+    "documents_retrieved": {},
+    "synthesis_cache": {}
+  },
+  "quality_snapshots": [
+    {
+      "timestamp": "2026-04-16T11:08:27.034642",
+      "iteration": 2,
+      "section_scores": {
+        "abstract": 0,
+        "introduction": 0,
+        "methods": 0,
+        "results": 0,
+        "discussion": 0,
+        "conclusion": 0
+      },
+      "overall_score": 0.0,
+      "gates_status": {
+        "abstract": true,
+        "introduction": true,
+        "methods": true,
+        "results": true,
+        "discussion": true,
+        "conclusion": true
+      },
+      "issues_count": 0
+    }
+  ],
+  "agent_calls": [
+    {
+      "timestamp": "2026-04-16T11:08:16.002798",
+      "agent": "data_extractor",
+      "action": "extract",
+      "input": "{}",
+      "output": "{'extractions_count': 0, 'extractions': [], 'aggregated': {'error': 'No extractions to aggregate'}, 'schema_used': {'study_characteristics': ['authors', 'year', 'country', 'study_design', 'sample_size",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:16.002835",
+      "agent": "meta_analyst",
+      "action": "analyze",
+      "input": "{}",
+      "output": "{'analysis_possible': False, 'reason': 'No extraction data available'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:16.002880",
+      "agent": "synthesizer",
+      "action": "synthesize",
+      "input": "{}",
+      "output": "{'synthesis_complete': False, 'reason': 'No data to synthesize'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:19.935489",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.086635",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.944784",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.415103",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.251576",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.586968",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.320237",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.641026",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.434751",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.752047",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.621999",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.962606",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{'content': ''}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.033582",
+      "agent": "consistency_checker",
+      "action": "check",
+      "input": "{}",
+      "output": "{'consistency_score': 1.0, 'issues': [], 'summary': 'No content to check.'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.034378",
+      "agent": "methodology_validator",
+      "action": "validate",
+      "input": "{}",
+      "output": "{'error': 'No content to validate'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.034441",
+      "agent": "academic_editor",
+      "action": "edit",
+      "input": "{}",
+      "output": "{'error': 'No content to edit'}",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.034570",
+      "agent": "visualizer",
+      "action": "generate",
+      "input": "{}",
+      "output": "{'visualizations': {'prisma_flow': {'type': 'prisma_flow', 'format': 'mermaid', 'specification': 'flowchart TD\\n    subgraph Identification\\n        A[Records identified through database searching<br/",
+      "duration_ms": 0
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.034619",
+      "agent": "citation_manager",
+      "action": "finalize",
+      "input": "{}",
+      "output": "{'sections_processed': 0, 'total_citations': 0, 'issues_found': []}",
+      "duration_ms": 0
+    }
+  ],
+  "errors": [
+    {
+      "timestamp": "2026-04-16T11:08:16.001387",
+      "agent": "literature_scout",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:16.002610",
+      "agent": "researcher",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:16.550204",
+      "agent": "gap_identifier",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:18.333113",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:19.301802",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:19.365257",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:19.935399",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:20.450812",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:20.521640",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:20.592543",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.025091",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.086560",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.172416",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.717811",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.800558",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.886019",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:21.944685",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.105330",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.187852",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.257073",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.336493",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.415019",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.475995",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.046274",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.116778",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.179740",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.251484",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.314648",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.380285",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.449601",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.518934",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.586898",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.640395",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.110949",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.182247",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.253844",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.320154",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.375163",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.441564",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.506264",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.578545",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.640944",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.702630",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.201799",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.268309",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.368114",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.434657",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.499335",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.557109",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.630265",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.691728",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.751871",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.815302",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.398439",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.465095",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.566043",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.621911",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.689865",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.769335",
+      "agent": "writer",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.835673",
+      "agent": "critic",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.900566",
+      "agent": "multi_evaluator",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:26.962427",
+      "agent": "fact_checker",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.027556",
+      "agent": "bias_auditor",
+      "type": "ServiceUnavailable",
+      "message": "503 Getting metadata from plugin failed with error: Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.033367",
+      "agent": "fact_checker",
+      "type": "TypeError",
+      "message": "FactCheckerAgent._check_facts() missing 1 required positional argument: 'content'"
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.034147",
+      "agent": "bias_auditor",
+      "type": "ValueError",
+      "message": "Unknown action: check"
+    }
+  ],
+  "warnings": [],
+  "human_review_requests": [
+    {
+      "timestamp": "2026-04-16T11:08:21.172963",
+      "reason": "Final score 0 below minimum 75",
+      "context": {
+        "section": "abstract"
+      },
+      "resolved": false
+    },
+    {
+      "timestamp": "2026-04-16T11:08:22.476357",
+      "reason": "Final score 0 below minimum 75",
+      "context": {
+        "section": "introduction"
+      },
+      "resolved": false
+    },
+    {
+      "timestamp": "2026-04-16T11:08:23.640643",
+      "reason": "Final score 0 below minimum 75",
+      "context": {
+        "section": "methods"
+      },
+      "resolved": false
+    },
+    {
+      "timestamp": "2026-04-16T11:08:24.702882",
+      "reason": "Final score 0 below minimum 75",
+      "context": {
+        "section": "results"
+      },
+      "resolved": false
+    },
+    {
+      "timestamp": "2026-04-16T11:08:25.815534",
+      "reason": "Final score 0 below minimum 75",
+      "context": {
+        "section": "discussion"
+      },
+      "resolved": false
+    },
+    {
+      "timestamp": "2026-04-16T11:08:27.027983",
+      "reason": "Final score 0 below minimum 75",
+      "context": {
+        "section": "conclusion"
+      },
+      "resolved": false
+    }
+  ],
+  "human_decisions": [],
+  "checkpoints": [
+    "initial",
+    "section_abstract",
+    "section_introduction",
+    "section_methods",
+    "section_results",
+    "section_discussion",
+    "section_conclusion",
+    "final"
+  ]
+}

@@ -4,6 +4,7 @@ import json
 from typing import Any, Optional
 
 import structlog
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 from agents.base_agent import BaseAgent, AgentRole, AgentResult
 from agents.llm_client import LLMClientFactory
@@ -51,6 +52,8 @@ class LiteratureScoutAgent(BaseAgent):
             return await self._screen_abstracts(**kwargs)
         elif action == "assess_coverage":
             return await self._assess_coverage(**kwargs)
+        elif action == "generate_wos_query":
+            return await self._generate_wos_query(**kwargs)
         else:
             raise ValueError(f"Unknown action: {action}")
     
@@ -237,6 +240,119 @@ Use Boolean operators, MeSH terms, and wildcards appropriately."""
             "inclusion_rate": total_included / total_found if total_found > 0 else 0,
             "recommendation": "Continue searching" if not coverage_adequate else "Coverage adequate"
         }
+    
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        retry=retry_if_exception_type((TimeoutError, ConnectionError)),
+        reraise=True
+    )
+    async def _generate_wos_query(
+        self,
+        missing_concepts: list[dict],
+        context: Optional[str] = None,
+        **kwargs
+    ) -> dict:
+        """
+        Generate Web of Science search queries for missing concepts.
+        
+        Args:
+            missing_concepts: List of missing theories, methodologies, or research areas
+            context: Additional context about the review topic
+            
+        Returns:
+            Dictionary with WOS-formatted queries
+            
+        Includes automatic retry logic (3 attempts) for LLM timeouts/connection errors.
+        """
+        
+        # Build concept descriptions
+        concepts_text = ""
+        for concept in missing_concepts:
+            concept_name = concept.get('theory_name') or concept.get('methodology_name') or concept.get('research_area', '')
+            search_terms = concept.get('search_terms', [])
+            why_needed = concept.get('why_needed', '')
+            
+            concepts_text += f"\n- {concept_name}"
+            if search_terms:
+                concepts_text += f"\n  Alternative terms: {', '.join(search_terms)}"
+            if why_needed:
+                concepts_text += f"\n  Reason: {why_needed}"
+        
+        system_prompt = """You are a Web of Science search query specialist.
+Generate precise WOS Advanced Search queries using field tags and Boolean operators.
+
+WOS Field Tags:
+- TI= (Title)
+- AB= (Abstract)
+- AU= (Author)
+- SO= (Source/Journal)
+- TS= (Topic - searches Title, Abstract, Keywords)
+
+Boolean Operators: AND, OR, NOT
+Use quotes for exact phrases: "Job Demands-Resources"
+Use parentheses for complex logic: (AI OR "artificial intelligence")
+Use wildcards: psycholog* for psychology, psychological, etc.
+
+Format queries for maximum recall while maintaining precision."""
+        
+        prompt = f"""Generate Web of Science Advanced Search queries for these missing concepts:
+
+{concepts_text}
+
+## Review Context
+{context or self.state.title}
+
+## Instructions
+Create 1-3 WOS queries that will retrieve relevant literature for the missing concepts.
+Combine related concepts into single queries where appropriate.
+Use field tags (TI=, TS=, AB=) and Boolean operators.
+
+## Output JSON
+{{
+    "queries": [
+        {{
+            "query": "TI=((\\"Job Demands-Resources\\" OR \\"JD-R\\")) AND TS=((\\"AI\\" OR \\"artificial intelligence\\"))",
+            "purpose": "Find literature on JD-R model in AI context",
+            "expected_results": "10-50",
+            "target_concepts": ["Job Demands-Resources", "AI applications"]
+        }}
+    ],
+    "search_strategy": {{
+        "approach": "description of search approach",
+        "rationale": "why these queries will address gaps",
+        "time_span": "recommended years to search",
+        "estimated_total_results": <number>
+    }},
+    "instructions": [
+        "Step-by-step instructions for user to execute search in WOS"
+    ]
+}}"""
+        
+        response = await self._llm_client.generate(
+            prompt=prompt,
+            system_prompt=system_prompt,
+            max_tokens=1500,
+            json_mode=True
+        )
+        
+        try:
+            wos_queries = json.loads(response.content)
+            
+            self.log.info(
+                "wos_queries_generated",
+                num_queries=len(wos_queries.get("queries", [])),
+                target_concepts=len(missing_concepts)
+            )
+            
+            return wos_queries
+            
+        except json.JSONDecodeError as e:
+            self.log.error("wos_query_generation_failed", error=str(e))
+            return {
+                "queries": [],
+                "error": "Failed to generate queries"
+            }
     
     def _enrich_result(self, result: AgentResult) -> AgentResult:
         """Add scout-specific metadata."""

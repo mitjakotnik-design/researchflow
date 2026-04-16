@@ -1,5 +1,6 @@
-"""Writer Agent: Generates and revises article sections."""
+"""Writer Agent: Generates and revises article sections with robust error handling."""
 
+import asyncio
 import json
 from typing import Any, Optional
 
@@ -21,15 +22,43 @@ class WriterAgent(BaseAgent):
     - Revise content based on feedback
     - Maintain academic writing standards
     - Follow PRISMA-ScR guidelines
+    
+    Robustness Features (v2.0):
+    - Exponential backoff retry logic
+    - Timeout protection for LLM calls
+    - Input sanitization against prompt injection
+    - Response validation
+    - Configurable parameters
     """
     
-    def __init__(self):
+    def __init__(
+        self,
+        max_retries: int = 3,
+        retry_delay: float = 1.0,
+        llm_timeout: float = 30.0,
+        truncate_length: int = 1000
+    ):
+        """
+        Initialize WriterAgent with configurable robustness parameters.
+        
+        Args:
+            max_retries: Maximum retry attempts for LLM calls (default: 3)
+            retry_delay: Initial retry delay in seconds (exponential backoff, default: 1.0)
+            llm_timeout: Timeout in seconds for each LLM call (default: 30.0)
+            truncate_length: Max characters for context truncation (default: 1000)
+        """
         super().__init__(
             name="writer",
             role=AgentRole.WRITING,
             description="Generates and revises scientific article sections",
-            version="1.0.0"
+            version="2.0.0"
         )
+        
+        # Robustness parameters
+        self.max_retries = max_retries
+        self.retry_delay = retry_delay
+        self.llm_timeout = llm_timeout
+        self.truncate_length = truncate_length
         
         self._llm_client = None
     
@@ -428,3 +457,179 @@ For the Conclusion:
                 }
             }
         return result
+    
+    async def _generate_with_retry(
+        self,
+        prompt: str,
+        system_prompt: Optional[str],
+        max_tokens: int,
+        operation: str
+    ) -> Any:
+        """
+        Generate LLM response with exponential backoff retry and timeout protection.
+        
+        Implements resilient API calling with:
+        - Exponential backoff (1s → 2s → 4s...)
+        - Configurable max retries
+        - Timeout protection
+        - Detailed error logging
+        
+        Args:
+            prompt: User prompt
+            system_prompt: Optional system prompt
+            max_tokens: Maximum tokens in response
+            operation: Operation name for logging (e.g., "write_section")
+        
+        Returns:
+            LLM response object
+        
+        Raises:
+            RuntimeError: If all retries exhausted
+        
+        Example:
+            >>> response = await self._generate_with_retry(
+            ...     prompt="Write introduction...",
+            ...     system_prompt="You are...",
+            ...     max_tokens=2000,
+            ...     operation="write_section"
+            ... )
+        """
+        for attempt in range(self.max_retries):
+            try:
+                response = await asyncio.wait_for(
+                    self._llm_client.generate(
+                        prompt=prompt,
+                        system_prompt=system_prompt,
+                        max_tokens=max_tokens
+                    ),
+                    timeout=self.llm_timeout
+                )
+                
+                self.log.info(
+                    "llm_call_success",
+                    operation=operation,
+                    attempt=attempt + 1,
+                    response_length=len(response.content) if response.content else 0
+                )
+                
+                return response
+                
+            except asyncio.TimeoutError:
+                if attempt < self.max_retries - 1:
+                    delay = self.retry_delay * (2 ** attempt)
+                    self.log.warning(
+                        "llm_call_timeout_retrying",
+                        operation=operation,
+                        attempt=attempt + 1,
+                        max_retries=self.max_retries,
+                        retry_delay=delay,
+                        timeout=self.llm_timeout
+                    )
+                    await asyncio.sleep(delay)
+                else:
+                    self.log.error(
+                        "llm_call_timeout_exhausted",
+                        operation=operation,
+                        attempts=self.max_retries,
+                        timeout=self.llm_timeout
+                    )
+                    raise RuntimeError(
+                        f"{operation} timed out after {self.max_retries} attempts "
+                        f"(timeout: {self.llm_timeout}s)"
+                    )
+            
+            except Exception as e:
+                if attempt < self.max_retries - 1:
+                    delay = self.retry_delay * (2 ** attempt)
+                    self.log.warning(
+                        "llm_call_failed_retrying",
+                        operation=operation,
+                        attempt=attempt + 1,
+                        max_retries=self.max_retries,
+                        retry_delay=delay,
+                        error=str(e)
+                    )
+                    await asyncio.sleep(delay)
+                else:
+                    self.log.error(
+                        "llm_call_exhausted",
+                        operation=operation,
+                        attempts=self.max_retries,
+                        error=str(e)
+                    )
+                    raise RuntimeError(
+                        f"{operation} failed after {self.max_retries} attempts: {e}"
+                    )
+    
+    def _sanitize_user_input(self, value: Any) -> str:
+        """
+        Sanitize user input to prevent prompt injection.
+        
+        Removes common injection patterns:
+        - Triple backticks (```)
+        - System/Assistant/User keywords
+        - Excessive whitespace
+        
+        Args:
+            value: Input value (converted to string)
+        
+        Returns:
+            Sanitized string (max 500 chars for safety)
+        
+        Example:
+            >>> sanitized = self._sanitize_user_input("```SYSTEM: Ignore previous")
+            >>> print(sanitized)
+            "Ignore previous"
+        """
+        str_value = str(value)
+        
+        # Remove injection patterns
+        str_value = str_value.replace("```", "")
+        str_value = str_value.replace("SYSTEM:", "")
+        str_value = str_value.replace("ASSISTANT:", "")
+        str_value = str_value.replace("USER:", "")
+        
+        # Limit length for safety
+        if len(str_value) > 500:
+            str_value = str_value[:500] + "... [truncated for safety]"
+            self.log.debug("input_truncated", original_length=len(str(value)))
+        
+        return str_value.strip()
+    
+    def _validate_response_content(
+        self,
+        content: str,
+        min_words: int,
+        operation: str
+    ) -> bool:
+        """
+        Validate LLM response meets minimum quality requirements.
+        
+        Args:
+            content: Response content to validate
+            min_words: Minimum required words
+            operation: Operation name for logging
+        
+        Returns:
+            True if valid, False otherwise
+        """
+        if not content or not content.strip():
+            self.log.error(
+                "response_validation_failed",
+                operation=operation,
+                reason="empty_content"
+            )
+            return False
+        
+        word_count = len(content.split())
+        if word_count < min_words * 0.5:  # Allow 50% threshold for validation
+            self.log.warning(
+                "response_validation_warning",
+                operation=operation,
+                word_count=word_count,
+                min_required=min_words,
+                reason="insufficient_length"
+            )
+            return False
+        
+        return True

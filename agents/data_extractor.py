@@ -96,32 +96,72 @@ class DataExtractorAgent(BaseAgent):
         cache = self.state.research_cache
         documents = []
         
-        for query_results in cache.queries_executed.values():
-            documents.extend(query_results)
+        # Safely get query results
+        if hasattr(cache, 'queries_executed') and isinstance(cache.queries_executed, dict):
+            for query, query_results in cache.queries_executed.items():
+                if isinstance(query_results, list):
+                    documents.extend(query_results)
         
         # Deduplicate
         seen = set()
         unique_docs = []
         for doc in documents:
-            doc_id = doc.get("id", "")
-            if doc_id not in seen:
+            if not isinstance(doc, dict):
+                continue
+                
+            # Handle different possible ID field names
+            doc_id = doc.get("id") or doc.get("document_id") or doc.get("doc_id", "")
+            if doc_id and doc_id not in seen:
                 seen.add(doc_id)
                 unique_docs.append(doc)
+        
+        if not unique_docs:
+            self.log.warning("no_documents_to_extract", cache_size=len(documents))
+            return {
+                "extractions_count": 0,
+                "extractions": [],
+                "aggregated": {},
+                "schema_used": schema
+            }
         
         # Extract from each document
         extractions = []
         for doc in unique_docs[:50]:  # Limit batch size
-            extraction = await self._extract_from_study(
-                content=doc.get("content", ""),
-                source=doc.get("source", ""),
-                schema=schema
-            )
-            extractions.append(extraction)
+            try:
+                # Handle different possible content field names
+                content = doc.get("content") or doc.get("text") or doc.get("page_content", "")
+                
+                # Safely extract source from metadata (can be dict or list)
+                source = doc.get("source", "")
+                if not source:
+                    metadata = doc.get("metadata")
+                    if isinstance(metadata, dict):
+                        source = metadata.get("source", "")
+                    elif isinstance(metadata, list) and len(metadata) > 0:
+                        # If metadata is list, try first element
+                        first_item = metadata[0]
+                        if isinstance(first_item, dict):
+                            source = first_item.get("source", "")
+                if not source:
+                    source = doc.get("document", "")
+                
+                if not content:
+                    continue
+                    
+                extraction = await self._extract_from_study(
+                    content=content,
+                    source=source,
+                    schema=schema
+                )
+                extractions.append(extraction)
+            except Exception as e:
+                self.log.error("extraction_failed_for_doc", doc_id=doc.get("id", "unknown"), error=str(e))
+                continue
         
         self._extractions = extractions
         
         # Aggregate results
-        aggregated = await self._aggregate_extractions(extractions=extractions)
+        aggregated = await self._aggregate_extractions(extractions=extractions) if extractions else {}
         
         self.log.info(
             "extraction_completed",

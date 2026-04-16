@@ -1,0 +1,346 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Data Charting Form Schema",
+  "description": "JSON schema for scoping review data extraction",
+  "type": "object",
+  "required": ["study_id", "reviewer", "extraction_date", "bibliographic", "methodology", "pcc"],
+  "properties": {
+    "study_id": {
+      "type": "string",
+      "description": "Unique study identifier (e.g., Smith2024a)",
+      "pattern": "^[A-Za-z]+[0-9]{4}[a-z]?$"
+    },
+    "reviewer": {
+      "type": "string",
+      "description": "Name of the reviewer"
+    },
+    "extraction_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of extraction (YYYY-MM-DD)"
+    },
+    "double_checked": {
+      "type": "boolean",
+      "default": false
+    },
+    "bibliographic": {
+      "type": "object",
+      "required": ["authors", "year", "title"],
+      "properties": {
+        "authors": {
+          "type": "string",
+          "description": "Author names (Last, F.M.)"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 2015,
+          "maximum": 2026
+        },
+        "title": {
+          "type": "string"
+        },
+        "journal": {
+          "type": "string"
+        },
+        "volume": {
+          "type": "string"
+        },
+        "issue": {
+          "type": "string"
+        },
+        "pages": {
+          "type": "string"
+        },
+        "doi": {
+          "type": "string",
+          "pattern": "^10\\.[0-9]+/.*$"
+        },
+        "publication_type": {
+          "type": "string",
+          "enum": ["article", "conference", "book_chapter", "report", "dissertation", "other"]
+        },
+        "open_access": {
+          "type": "boolean"
+        }
+      }
+    },
+    "methodology": {
+      "type": "object",
+      "properties": {
+        "study_design": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["quantitative", "qualitative", "mixed", "review", "conceptual"]
+            },
+            "subtype": {
+              "type": "string",
+              "description": "e.g., cross-sectional, longitudinal, RCT, case study"
+            },
+            "data_collection": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["survey", "interview", "focus_group", "observation", "secondary_data", "experiment", "other"]
+              }
+            },
+            "analysis_method": {
+              "type": "string",
+              "description": "e.g., SEM, regression, thematic analysis"
+            }
+          }
+        },
+        "sample": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "response_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "demographics": {
+              "type": "string"
+            }
+          }
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "countries": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "industries": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "organization_size": {
+              "type": "string",
+              "enum": ["micro", "small", "medium", "large", "mixed", "not_reported"]
+            },
+            "sector": {
+              "type": "string",
+              "enum": ["public", "private", "nonprofit", "mixed", "not_reported"]
+            },
+            "data_collection_period": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "pcc": {
+      "type": "object",
+      "description": "Population, Concept, Context framework",
+      "properties": {
+        "population": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "type": "string",
+              "description": "Main population studied"
+            },
+            "secondary": {
+              "type": "string"
+            },
+            "characteristics": {
+              "type": "string"
+            }
+          }
+        },
+        "concept": {
+          "type": "object",
+          "properties": {
+            "main_constructs": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "operationalization": {
+              "type": "string"
+            },
+            "measurement_instruments": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "organizational": {"type": "string"},
+            "cultural": {"type": "string"},
+            "technological": {"type": "string"}
+          }
+        }
+      }
+    },
+    "ai_technology": {
+      "type": "object",
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "resume_screening",
+              "video_interviews",
+              "chatbots",
+              "monitoring",
+              "analytics",
+              "robotics",
+              "decision_support",
+              "other"
+            ]
+          }
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "implementation_stage": {
+          "type": "string",
+          "enum": ["planning", "pilot", "full_deployment", "not_reported"]
+        },
+        "automation_level": {
+          "type": "string",
+          "enum": ["decision_support", "automated", "autonomous", "not_reported"]
+        }
+      }
+    },
+    "hr_function": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "recruitment",
+              "onboarding",
+              "performance",
+              "learning",
+              "compensation",
+              "wellbeing",
+              "offboarding"
+            ]
+          }
+        },
+        "secondary": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "affected_roles": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "psychosocial": {
+      "type": "object",
+      "properties": {
+        "risks_identified": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "stress",
+              "burnout",
+              "autonomy_loss",
+              "surveillance_anxiety",
+              "perceived_unfairness",
+              "job_insecurity",
+              "social_deterioration",
+              "work_life_imbalance",
+              "meaning_loss"
+            ]
+          }
+        },
+        "protective_factors": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "theoretical_framework": {
+          "type": "string",
+          "description": "e.g., JD-R model, stress-coping, TAM"
+        },
+        "instruments": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "e.g., COPSOQ, MBI, UWES, OCAI"
+        }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "properties": {
+        "key_results": {
+          "type": "array",
+          "items": {"type": "string"},
+          "maxItems": 10
+        },
+        "effect_direction": {
+          "type": "string",
+          "enum": ["positive", "negative", "mixed", "null"]
+        },
+        "effect_size": {
+          "type": "string",
+          "description": "If quantitative: Cohen's d, r, OR, etc."
+        },
+        "moderators": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "mediators": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "organizational_outcomes": {
+      "type": "object",
+      "properties": {
+        "culture_impact": {"type": "string"},
+        "trust_impact": {"type": "string"},
+        "resistance_factors": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "success_factors": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "properties": {
+        "limitations": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "bias_risk": {
+          "type": "string",
+          "enum": ["low", "moderate", "high", "unclear"]
+        },
+        "generalizability": {
+          "type": "string",
+          "enum": ["high", "moderate", "low", "unclear"]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "extraction_notes": {
+      "type": "string"
+    },
+    "requires_human_review": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

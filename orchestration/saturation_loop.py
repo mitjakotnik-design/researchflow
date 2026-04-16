@@ -200,13 +200,30 @@ class SaturationLoop:
         
         total_duration = int((time.perf_counter() - start_time) * 1000)
         
-        # Determine success and human review needs
-        final_iteration = iteration_history[-1] if iteration_history else None
-        final_score = final_iteration.score if final_iteration else 0
+        # IMPROVEMENT: Use BEST iteration (highest score) instead of last
+        best_iteration = None
+        best_content = current_content
+        
+        if iteration_history:
+            # Find iteration with highest score
+            best_iteration = max(iteration_history, key=lambda x: x.score)
+            best_content = best_iteration.content
+            
+            self.log.info(
+                "best_iteration_selected",
+                best_iteration=best_iteration.iteration,
+                best_score=best_iteration.score,
+                last_iteration=iteration_history[-1].iteration,
+                last_score=iteration_history[-1].score
+            )
+        else:
+            best_iteration = None
+        
+        final_score = best_iteration.score if best_iteration else 0
         
         success = (
             final_score >= self.config.minimum_acceptable and
-            (final_iteration.gates_passed if final_iteration else False)
+            (best_iteration.gates_passed if best_iteration else False)
         )
         
         needs_human_review, review_reason = self._check_human_review_needed(
@@ -221,8 +238,8 @@ class SaturationLoop:
             final_score=final_score,
             target_score=self.config.target_score,
             iterations_used=len(iteration_history),
-            final_content=current_content,
-            word_count=len(current_content.split()),
+            final_content=best_content,
+            word_count=len(best_content.split()),
             iteration_history=iteration_history,
             needs_human_review=needs_human_review,
             human_review_reason=review_reason,

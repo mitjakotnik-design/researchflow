@@ -45,6 +45,16 @@ from .researcher_v2 import ResearcherAgentV2
 from .multi_evaluator_v2 import MultiEvaluatorAgentV2
 from .fact_checker_v2 import FactCheckerAgentV2
 
+# Skill Loader
+from .skill_loader import (
+    SkillLoader,
+    SkillMetadata,
+    get_skill,
+    get_system_prompt,
+    list_all_skills,
+    load_config,
+)
+
 __all__ = [
     # Base
     "BaseAgent",
@@ -99,5 +109,12 @@ __all__ = [
     "ResearcherAgentV2",
     "MultiEvaluatorAgentV2",
     "FactCheckerAgentV2",
+    # Skill Loader
+    "SkillLoader",
+    "SkillMetadata",
+    "get_skill",
+    "get_system_prompt",
+    "list_all_skills",
+    "load_config",
 ]
 

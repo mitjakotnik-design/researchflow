@@ -1,0 +1,22 @@
+# ResearchFlow Skills Requirements
+# 
+# Install with:
+#   pip install -r requirements.txt
+
+# Core dependencies (required)
+PyYAML>=6.0           # YAML parsing for SKILL.md
+
+# Optional: Schema validation
+jsonschema>=4.17      # JSON Schema validation
+
+# Optional: IRR Calculator
+numpy>=1.24           # Numerical arrays
+scipy>=1.10           # Statistical functions (Cohen's Kappa)
+
+# Optional: PRISMA Generator
+# (no external dependencies - uses standard library)
+
+# Development
+pytest>=7.0           # Testing
+black>=23.0           # Code formatting
+mypy>=1.0             # Type checking

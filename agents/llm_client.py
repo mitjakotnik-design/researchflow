@@ -82,29 +82,21 @@ class GeminiClient(BaseLLMClient):
         super().__init__(model, temperature)
         
         try:
-            import google.generativeai as genai
+            from google import genai
         except ImportError:
             raise ImportError(
-                "google-generativeai not installed. "
-                "Run: pip install google-generativeai"
+                "google-genai not installed. "
+"Run: pip install google-genai"
             )
         
-        self.genai = genai
         api_key = api_key or os.getenv("GOOGLE_API_KEY")
         
         if not api_key:
             raise ValueError("GOOGLE_API_KEY not set")
         
-        genai.configure(api_key=api_key)
+        self.client = genai.Client(api_key=api_key)
         
-        self.client = genai.GenerativeModel(
-            model_name=model,
-            generation_config=genai.types.GenerationConfig(
-                temperature=temperature,
-            )
-        )
-        
-        self.log.info("gemini_client_initialized", model=model)
+        self.log.info("gemini_client_initialized", model=model, sdk="google-genai")
     
     async def generate(
         self,
@@ -114,51 +106,52 @@ class GeminiClient(BaseLLMClient):
         json_mode: bool = False,
         stop_sequences: Optional[list[str]] = None
     ) -> LLMResponse:
-        """Generate a response using Gemini."""
+        """Generate a response using Gemini (new SDK)."""
         import time
         
         start_time = time.perf_counter()
         
-        # Build content
-        contents = []
-        
+        # Build content (new SDK uses simple string)
         if system_prompt:
-            contents.append({"role": "user", "parts": [system_prompt]})
-            contents.append({"role": "model", "parts": ["Understood. I will follow these instructions."]})
+            full_prompt = f"{system_prompt}\n\n{prompt}"
+        else:
+            full_prompt = prompt
         
-        contents.append({"role": "user", "parts": [prompt]})
+        # Configure generation (new SDK uses dict)
+        config = {
+            'temperature': self.temperature,
+        }
         
-        # Configure generation
-        generation_config = self.genai.types.GenerationConfig(
-            temperature=self.temperature,
-            max_output_tokens=max_tokens,
-            stop_sequences=stop_sequences,
-        )
+        if stop_sequences:
+            config['stop_sequences'] = stop_sequences
         
         if json_mode:
-            generation_config.response_mime_type = "application/json"
+            config['response_mime_type'] = 'application/json'
         
         try:
-            # Run in thread pool since Gemini SDK is sync
+            # Run in thread pool since SDK is sync
             loop = asyncio.get_event_loop()
             response = await loop.run_in_executor(
                 None,
-                lambda: self.client.generate_content(
-                    contents,
-                    generation_config=generation_config
+                lambda: self.client.models.generate_content(
+                    model=self.model,
+                    contents=full_prompt,
+                    config=config
                 )
             )
             
             latency_ms = int((time.perf_counter() - start_time) * 1000)
             
+            # Extract content
+            content = response.text if hasattr(response, 'text') else ""
+            
             # Extract token counts if available
             input_tokens = 0
             output_tokens = 0
             if hasattr(response, "usage_metadata"):
-                input_tokens = getattr(response.usage_metadata, "prompt_token_count", 0)
-                output_tokens = getattr(response.usage_metadata, "candidates_token_count", 0)
-            
-            content = response.text if hasattr(response, "text") else ""
+                meta = response.usage_metadata
+                input_tokens = meta.prompt_token_count if hasattr(meta, 'prompt_token_count') else 0
+                output_tokens = meta.candidates_token_count if hasattr(meta, 'candidates_token_count') else 0
             
             self.log.debug(
                 "gemini_response",
@@ -174,7 +167,7 @@ class GeminiClient(BaseLLMClient):
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
                 latency_ms=latency_ms,
-                finish_reason=str(response.candidates[0].finish_reason) if response.candidates else "",
+                finish_reason="STOP",
                 raw_response=response
             )
             

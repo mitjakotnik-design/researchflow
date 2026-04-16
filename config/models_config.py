@@ -54,12 +54,12 @@ MODELS = {
         max_tokens=16384,
         default_temperature=0.3,
     ),
-    "gemini-2.5-pro-preview": ModelSpec(
-        name="gemini-2.5-pro-preview",
+    "gemini-3.1-pro-preview": ModelSpec(
+        name="gemini-3.1-pro-preview",
         provider="google",
         cost_per_1m_input=2.50,
         cost_per_1m_output=10.00,
-        max_tokens=16384,
+        max_tokens=32768,
         default_temperature=0.1,
     ),
     # Anthropic Models
@@ -91,8 +91,8 @@ class ModelsConfig:
     tier_models: dict[ModelTier, str] = field(default_factory=lambda: {
         ModelTier.LITE: "gemini-2.5-flash-lite",
         ModelTier.FAST: "gemini-2.5-flash",
-        ModelTier.PRO: "gemini-2.5-pro",
-        ModelTier.PREMIUM: "gemini-2.5-pro-preview",
+        ModelTier.PRO: "gemini-3.1-pro-preview",
+        ModelTier.PREMIUM: "gemini-3.1-pro-preview",
     })
     
     # Agent-specific model overrides
@@ -101,27 +101,27 @@ class ModelsConfig:
         "researcher": "gemini-2.5-flash",
         "literature_scout": "gemini-2.5-flash",
         "data_extractor": "gemini-2.5-flash",
-        "meta_analyst": "gemini-2.5-pro",
-        "gap_identifier": "gemini-2.5-pro",
+        "meta_analyst": "gemini-3.1-pro-preview",
+        "gap_identifier": "gemini-3.1-pro-preview",
         
         # Writing Cluster
-        "writer": "gemini-2.5-pro",
-        "synthesizer": "gemini-2.5-pro",
-        "academic_editor": "gemini-2.5-pro",
+        "writer": "gemini-3.1-pro-preview",
+        "synthesizer": "gemini-3.1-pro-preview",
+        "academic_editor": "gemini-3.1-pro-preview",
         "terminology_guardian": "gemini-2.5-flash-lite",
         "citation_manager": "gemini-2.5-flash-lite",
-        "visualizer": "gemini-2.5-pro",
+        "visualizer": "gemini-3.1-pro-preview",
         
         # Quality Cluster
-        "multi_evaluator": "gemini-2.5-pro",
-        "critic": "gemini-2.5-pro",
-        "fact_checker": "gemini-2.5-pro",
-        "bias_auditor": "gemini-2.5-pro",
+        "multi_evaluator": "gemini-3.1-pro-preview",
+        "critic": "gemini-3.1-pro-preview",
+        "fact_checker": "gemini-3.1-pro-preview",
+        "bias_auditor": "gemini-3.1-pro-preview",
         "consistency_checker": "gemini-2.5-flash",
         "methodology_validator": "gemini-2.5-flash",
         
         # Orchestration
-        "meta_orchestrator": "gemini-2.5-pro",
+        "meta_orchestrator": "gemini-3.1-pro-preview",
     })
     
     # Temperature overrides per agent
